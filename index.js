@@ -282,7 +282,7 @@ class WebAppDock {
                 dialog.destroy();
                 dock.refresh();
             } catch (e) {
-                console.log(e);
+                console.error(e);
                 return;
             }
            
@@ -321,7 +321,6 @@ module.exports = class WebAppPlugin extends Plugin {
                     this.appsConfig.push(conf);
                     this.apps.push(new WebApp(conf))
                 });
-                console.log(this.apps);
                 this.webAppDock.refresh();
             } catch (e) {
                 console.error('web app 解析失败', e);
@@ -343,7 +342,6 @@ module.exports = class WebAppPlugin extends Plugin {
     }
 
     async remove(name) {
-        console.log(name);
         const i = this.apps.findIndex((v) => v.name === name);
         if (i >= 0) {
             this.apps.splice(i, 1);
@@ -352,7 +350,6 @@ module.exports = class WebAppPlugin extends Plugin {
         if (j >= 0) {
             this.appsConfig.splice(j, 1);
         }
-        console.log(i, j);
         await this.updateStorage();
         this.webAppDock.refresh();
     }
