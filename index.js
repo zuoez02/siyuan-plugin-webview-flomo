@@ -223,7 +223,7 @@ class WebAppDock {
     }
 
     refresh() {
-        this.render();
+        this.render && this.render();
     }
 
     addWebApp() {
