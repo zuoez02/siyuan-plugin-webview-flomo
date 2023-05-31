@@ -1,4 +1,4 @@
-const { Plugin, openTab, Dialog, isMobile } = require('siyuan');
+const { Plugin, openTab, Dialog } = require('siyuan');
 
 function registerIcon(name, size, svg) {
     document.body.insertAdjacentHTML('beforeend', `
@@ -271,7 +271,7 @@ class WebAppDock {
                 <button class="b3-button b3-button--cancel">取消</button><div class="fn__space"></div>
                 <button class="b3-button b3-button--text">添加</button>
             </div>`,
-            width: isMobile() ? "92vw" : "520px",
+            width: "520px",
         });
         const nameEl = dialog.element.querySelector("#appname");
         const urlEl = dialog.element.querySelector("#appurl");
