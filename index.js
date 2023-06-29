@@ -214,7 +214,8 @@ class WebAppDock {
                             e.preventDefault();
                             e.stopPropagation();
                             let target;
-                            for (const f of e.path) {
+                            const p = e.path || (e.composedPath  && e.composedPath())
+                            for (const f of p) {
                                 if (f.classList.contains('deleteapp')) {
                                     target = f;
                                     break;
