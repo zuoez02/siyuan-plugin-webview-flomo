@@ -192,8 +192,9 @@ class WebAppDock {
                     
                     <div class="fn__flex-1 plugin-webapp_custom-dock">
                         ${this.data.apps.map((app) => {
-                        return `<div class="webapp" data-name="${app.name}"><svg><use xlink:href="#${app.iconName}"></use></svg>
-                                <span>${app.title}</span>
+                        return `<div class="webapp" style="display: flex; align-items: center; gap: 3px;" data-name="${app.name}">
+                                <svg><use xlink:href="#${app.iconName}"></use></svg>
+                                <span style="flex: 1">${app.title}</span>
                                 ${app.internal ? '' : `<span class="deleteapp b3-tooltips b3-tooltips__w" aria-label="删除" data-name="${app.name}"><svg><use xlink:href="#iconTrashcan"></use></svg></span>`}
                             </div>`
                     }).join('')}
