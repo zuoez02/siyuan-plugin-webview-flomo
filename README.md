@@ -1,20 +1,27 @@
 # Web工具集成
 
-## Flomo
+## 功能
+
+1. 内置默认app，可自行添加web页面使用在线内容，见下面example
+2. 将app添加到dock，更易用
+
+## 内置APP
+
+### Flomo
 集成Flomo的在线网页版，点击顶栏右侧的flomo icon即可打开
 
-## Cubox
+### Cubox
 集成Cubox的在线网页版，点击顶栏右侧的Cubox icon即可打开
 
-## 滴答清单
+### 滴答清单
 集成滴答清单的在线网页版，点击顶栏右侧的滴答清单 icon即可打开
 
-## 自定义
+### 自定义
 
 1. 点击右上角添加，输入名称请勿带有空格和特殊符号。
 2. 支持自定义脚本和debug模式，需添加完成后手动在`工作空间目录/data/storage/petal/siyuan-plugin-webapp/app.txt`中修改json，添加script字段和debug字段
 
-### Example
+## Example
 ```json
 {
     "name": "AI",
