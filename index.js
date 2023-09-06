@@ -88,6 +88,23 @@ const flomo = new WebApp({
   isTopBar: true,
   topBarPostion: "right",
   url: "https://v.flomoapp.com",
+  script: `
+  setInterval(() => {
+    document.querySelectorAll('.memo').forEach((v) => {
+      if (v.hasAttribute('draggable')) {
+        return;
+      }
+      console.log(v, v.querySelector('.mainContent')?.innerHTML);
+      v.setAttribute('draggable', 'true');
+      v.addEventListener('dragstart', (e) => {
+        const content = v.querySelector('.mainContent')?.innerHTML;
+        if (content) {
+          e.dataTransfer.setData('text/html', content);
+        }
+      })
+    })
+  })
+  `,
 });
 
 const cubox = new WebApp({
@@ -203,14 +220,14 @@ class WebAppDock {
                                 }"></use></svg>
                                 <span style="flex: 1">${app.title}</span>
                                 ${
-                                  plugin.docksConfig.some((v) => v === app.name) ? '' : `<span class="adddock b3-tooltips b3-tooltips__w" aria-label="添加到Dock" data-name="${
-                                    app.name
-                                  }"><svg><use xlink:href="#iconDock"></use></svg></span>`
+                                  plugin.docksConfig.some((v) => v === app.name)
+                                    ? ""
+                                    : `<span class="adddock b3-tooltips b3-tooltips__w" aria-label="添加到Dock" data-name="${app.name}"><svg><use xlink:href="#iconDock"></use></svg></span>`
                                 }
                                 ${
-                                  plugin.docksConfig.some((v) => v === app.name) ? `<span class="deletedock b3-tooltips b3-tooltips__w" aria-label="删除Dock" data-name="${
-                                    app.name
-                                  }"><svg><use xlink:href="#iconHideDock"></use></svg></span>` : ''
+                                  plugin.docksConfig.some((v) => v === app.name)
+                                    ? `<span class="deletedock b3-tooltips b3-tooltips__w" aria-label="删除Dock" data-name="${app.name}"><svg><use xlink:href="#iconHideDock"></use></svg></span>`
+                                    : ""
                                 }
                                 ${
                                   app.internal
@@ -376,6 +393,64 @@ class WebAppDock {
   }
 }
 
+const renderView = (context) => {
+  context.element.innerHTML = `<div style="display: flex" class="fn__flex-column fn__flex fn__flex-1 ${context.data.name}__custom-tab">
+                        <webview disablewebsecurity nodeIntegration nodeIntegrationSubframe webpreferences="contextIsolation=false" allowfullscreen allowpopups style="border: none" class="fn__flex-column fn__flex  fn__flex-1" src="${context.data.url}"></webview>
+                    </div>`;
+  const webview = context.element.querySelector("webview");
+  if (context.data.script) {
+    webview.addEventListener("load-commit", () => {
+      const ps = webview.executeJavaScript(context.data.script);
+      if (context.data.debug);
+      ps.then(console.log);
+    });
+  }
+
+  if (context.data.debug) {
+    webview.addEventListener("dom-ready", () => {
+      webview.openDevTools();
+    });
+  }
+
+  const panel = context.element.querySelector(
+    `.${context.data.name}__custom-tab`
+  );
+
+  function 隐藏遮罩() {
+    panel.querySelector(".ovelayer")
+      ? panel.querySelector(".ovelayer").remove()
+      : null;
+  }
+  function 显示遮罩() {
+    if (!panel.querySelector(".ovelayer")) {
+      let div = document.createElement("div");
+      div.setAttribute(
+        "style",
+        `position:absolute;bottom:0;left:0;height:${panel.clientHeight}px;width:100%`
+      );
+      div.setAttribute("class", "ovelayer");
+      div.addEventListener("mousedown", () => {
+        siyuanMenu.close();
+      });
+      panel.appendChild(div);
+    }
+  }
+  document.addEventListener(
+    "mousedown",
+    () => {
+      显示遮罩();
+    },
+    true
+  );
+  document.addEventListener(
+    "mouseup",
+    () => {
+      隐藏遮罩();
+    },
+    true
+  );
+};
+
 module.exports = class WebAppPlugin extends Plugin {
   constructor(args) {
     super(args);
@@ -444,7 +519,7 @@ module.exports = class WebAppPlugin extends Plugin {
     if (j >= 0) {
       this.appsConfig.splice(j, 1);
     }
-    const k = this.docksConfig.findIndex(v => v === name);
+    const k = this.docksConfig.findIndex((v) => v === name);
     if (k >= 0) {
       this.docksConfig.splice(k, 1);
     }
@@ -457,63 +532,7 @@ module.exports = class WebAppPlugin extends Plugin {
       const tab = this.addTab({
         type: app.name,
         init() {
-          this.element.innerHTML = `<div style="display: flex" class="fn__flex-column fn__flex fn__flex-1 ${this.data.name}__custom-tab">
-                        <webview allowfullscreen allowpopups style="border: none" class="fn__flex-column fn__flex  fn__flex-1" src="${this.data.url}"></webview>
-                    </div>`;
-
-          if (this.data.script) {
-            const webview = this.element.querySelector("webview");
-            webview.addEventListener("load-commit", () => {
-              const ps = webview.executeJavaScript(this.data.script);
-              if (this.data.debug);
-              ps.then(console.log);
-            });
-          }
-
-          if (this.data.debug) {
-            const webview = this.element.querySelector("webview");
-            webview.addEventListener("dom-ready", () => {
-              webview.openDevTools();
-            });
-          }
-
-          const panel = this.element.querySelector(
-            `.${this.data.name}__custom-tab`
-          );
-
-          function 隐藏遮罩() {
-            panel.querySelector(".ovelayer")
-              ? panel.querySelector(".ovelayer").remove()
-              : null;
-          }
-          function 显示遮罩() {
-            if (!panel.querySelector(".ovelayer")) {
-              let div = document.createElement("div");
-              div.setAttribute(
-                "style",
-                `position:absolute;bottom:0;left:0;height:${panel.clientHeight}px;width:100%`
-              );
-              div.setAttribute("class", "ovelayer");
-              div.addEventListener("mousedown", () => {
-                siyuanMenu.close();
-              });
-              panel.appendChild(div);
-            }
-          }
-          document.addEventListener(
-            "mousedown",
-            () => {
-              显示遮罩();
-            },
-            true
-          );
-          document.addEventListener(
-            "mouseup",
-            () => {
-              隐藏遮罩();
-            },
-            true
-          );
+          renderView(this);
         },
       });
       app.openTab = () =>
@@ -554,46 +573,7 @@ module.exports = class WebAppPlugin extends Plugin {
       },
       type: `${this.name}_${app.name}`,
       init() {
-        this.element.innerHTML = `<div style="display: flex" class="fn__flex-column fn__flex fn__flex-1 ${this.data.name}__custom-tab">
-        <webview allowfullscreen allowpopups style="border: none" class="fn__flex-column fn__flex  fn__flex-1" src="${this.data.url}"></webview>
-    </div>`;
-        const panel = this.element.querySelector(
-          `.${this.data.name}__custom-tab`
-        );
-
-        function 隐藏遮罩() {
-          panel.querySelector(".ovelayer")
-            ? panel.querySelector(".ovelayer").remove()
-            : null;
-        }
-        function 显示遮罩() {
-          if (!panel.querySelector(".ovelayer")) {
-            let div = document.createElement("div");
-            div.setAttribute(
-              "style",
-              `position:absolute;bottom:0;left:0;height:${panel.clientHeight}px;width:100%`
-            );
-            div.setAttribute("class", "ovelayer");
-            div.addEventListener("mousedown", () => {
-              siyuanMenu.close();
-            });
-            panel.appendChild(div);
-          }
-        }
-        document.addEventListener(
-          "mousedown",
-          () => {
-            显示遮罩();
-          },
-          true
-        );
-        document.addEventListener(
-          "mouseup",
-          () => {
-            隐藏遮罩();
-          },
-          true
-        );
+        renderView(this);
       },
     });
     if (this.docksConfig.find((a) => a === app.name)) {
@@ -605,8 +585,8 @@ module.exports = class WebAppPlugin extends Plugin {
   }
 
   async removeDock(dockname) {
-      const i = this.docksConfig.findIndex((v) => v === dockname);
-      console.log(dockname, i)
+    const i = this.docksConfig.findIndex((v) => v === dockname);
+    console.log(dockname, i);
     if (i >= 0) {
       this.docksConfig.splice(i, 1);
       await this.updateStorage();
