@@ -395,7 +395,7 @@ class WebAppDock {
 
 const renderView = (context) => {
   context.element.innerHTML = `<div style="display: flex" class="fn__flex-column fn__flex fn__flex-1 ${context.data.name}__custom-tab">
-                        <webview disablewebsecurity nodeIntegration nodeIntegrationSubframe webpreferences="contextIsolation=false" allowfullscreen allowpopups style="border: none" class="fn__flex-column fn__flex  fn__flex-1" src="${context.data.url}"></webview>
+                        <webview allowfullscreen allowpopups style="border: none" class="fn__flex-column fn__flex  fn__flex-1" src="${context.data.url}"></webview>
                     </div>`;
   const webview = context.element.querySelector("webview");
   if (context.data.script) {
