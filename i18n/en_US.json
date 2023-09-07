@@ -1,0 +1,20 @@
+{
+    "parseFail": "Failed to parse Web App",
+    "fileReaderUndefined": "<p>Sorry, your browser does not support FileReader</p>",
+    "pleaseChooseImage": "Please choose an image",
+    "ensureImage": "Please ensure the file is an image file",
+    "title": "Web Application",
+    "create": "Create",
+    "min": "Minimize",
+    "addToDock": "Add to Dock",
+    "deleteDock": "Delete from Dock",
+    "setAsHomepage": "Set as Homepage",
+    "removeApp": "Remove Web Application",
+    "dialogAdd": "Add Web Application",
+    "appname": "Application Name",
+    "attention": "Instructions:\nNote: Only enter an English name, and enter the complete URL with the https or http protocol. Please choose a square image, and click the Add button when both are complete.",
+    "cancel": "Cancel",
+    "add": "Add",
+    "hasScript": "Has Enhancement Script",
+    "hasDebug": "Debug Mode"
+}

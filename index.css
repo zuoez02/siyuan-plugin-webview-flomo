@@ -1,0 +1,30 @@
+.plugin-webapp_custom-dock {
+    padding: 0px;
+}
+
+.plugin-webapp_custom-dock .webapp {
+    padding: 4px;
+    margin: 2px 6px;
+    border: 1px solid transparent;
+    font-size: 16px;
+}
+
+.plugin-webapp_custom-dock .webapp:hover {
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: var(--b3-list-icon-hover);
+}
+
+.plugin-webapp_custom-dock .webapp  span.func-btn {
+    display: none;
+}
+
+.plugin-webapp_custom-dock .webapp:hover  span.func-btn {
+    display: inline;
+}
+
+.plugin-webapp_custom-dock .webapp svg {
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+}

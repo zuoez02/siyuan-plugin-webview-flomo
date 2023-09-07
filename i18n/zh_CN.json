@@ -1,0 +1,20 @@
+{
+    "parseFail": "Web App解析失败",
+    "fileReaderUndefined": "<p>抱歉，你的浏览器不支持 FileReader</p>",
+    "pleaseChooseImage": "请选择图片",
+    "ensureImage": "请确保文件为图像文件",
+    "title": "Web应用",
+    "create": "新建",
+    "min": "最小化",
+    "addToDock": "添加到Dock",
+    "deleteDock": "从Dock中删除",
+    "setAsHomepage": "设为/取消首页",
+    "removeApp": "删除Web应用",
+    "dialogAdd": "添加Web应用",
+    "appname": "应用名称",
+    "attention": "使用说明:\n注意：输入名称仅支持英文，url请输入完整https或http协议链接。选择图片尽量为正方形，均完成后点击添加按钮。",
+    "cancel": "取消",
+    "add": "添加",
+    "hasScript": "含增强脚本",
+    "hasDebug": "调试模式"
+}

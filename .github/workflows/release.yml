@@ -16,7 +16,7 @@ jobs:
       - name: Package zip
         uses: vimtor/action-zip@v1
         with:
-          files: icon.png index.js plugin.json preview.png README.md
+          files: icon.png index.js plugin.json preview.png README.md i18n/
           recursive: false
           dest: package.zip
 

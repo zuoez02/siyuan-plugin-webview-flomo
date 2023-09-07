@@ -14,22 +14,24 @@ function registerIcon(name, size, svg) {
   );
 }
 
+const i18n = {};
+
 async function readImageAsBase64(fileEl) {
   return new Promise((resolve, reject) => {
     if (typeof FileReader == "undifined") {
       //判断浏览器是否支持filereader
-      console.error("<p>抱歉，你的浏览器不支持 FileReader</p>");
+      console.error(i18n.fileReaderUndefined);
       reject(false);
       return;
     }
     const file = fileEl.files[0];
     if (!file) {
-      alert("请选择图片");
+      alert(i18n.pleaseChooseImage);
       reject(false);
     }
     if (!/image\/\w+/.test(file.type)) {
       //判断获取的是否为图片文件
-      alert("请确保文件为图像文件");
+      alert(i18n.ensureImage);
       reject(false);
       return false;
     }
@@ -129,22 +131,6 @@ const dida = new WebApp({
   url: "https://www.dida365.com",
 });
 
-const ChatDOC = new WebApp({
-  name: "ChatDOC",
-  title: "ChatDOC",
-  iconName: "iconChatDOC",
-  iconSymbolSize: 100,
-  url: "https://chatdoc.com",
-  debug: false,
-  isTopBar: true,
-  topBarPostion: "right",
-  script: `
-document.querySelector('.chatdoc-btn.nav-link')?.removeAttribute('target');
-    `,
-  iconSvg:
-    '<image href="data:image/png;base64,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" />',
-});
-
 class WebAppDock {
   constructor(webAppPlugin) {
     this.webAppPlugin = webAppPlugin;
@@ -167,7 +153,7 @@ class WebAppDock {
         position: "LeftBottom",
         size: { width: 200, height: 0 },
         icon: "iconWebApp",
-        title: "Web应用",
+        title: i18n.title,
       },
       data: {
         apps: this.webAppPlugin.apps,
@@ -175,38 +161,16 @@ class WebAppDock {
       type: "WebAppDock",
       init() {
         const render = () => {
-          this.element.innerHTML = `<div class="fn__flex-1 fn__flex-column">
-                            <style>
-                        .plugin-webapp_custom-dock {
-                            padding: 0px;
-                        }
-                        .plugin-webapp_custom-dock .webapp {
-                            padding: 4px;
-                            margin: 2px 6px;
-                            font-size: 16px;
-                        }
-                        .plugin-webapp_custom-dock .webapp:hover {
-                            cursor: pointer;
-                            border-radius: 4px;
-                            background-color: var(--b3-list-background);
-                        }
-                        .plugin-webapp_custom-dock .webapp {
-
-                    }
-                    .plugin-webapp_custom-dock .webapp svg {
-                        width: 14px;
-                        height: 14px;
-                        margin-right: 6px;
-                    }
-                    </style>
+          this.element.innerHTML = `
+          <div class="fn__flex-1 fn__flex-column">
                     <div class="block__icons">
                         <div class="block__logo">
                             <svg><use xlink:href="#iconWebApp"></use></svg>
-                            Web应用
+                            ${i18n.title}
                         </div>
                         <span class="fn__flex-1 fn__space"></span>
-                        <span data-type="min" class="block__icon b3-tooltips b3-tooltips__sw" aria-label="最小化"><svg><use xlink:href="#iconMin"></use></svg></span>
-                        <span id="add-webapp" class="block__icon b3-tooltips b3-tooltips__sw" aria-label="新建"><svg><use xlink:href="#iconAdd"></use></svg></span>
+                        <span data-type="min" class="block__icon b3-tooltips b3-tooltips__sw" aria-label="${i18n.min}"><svg><use xlink:href="#iconMin"></use></svg></span>
+                        <span id="add-webapp" class="block__icon b3-tooltips b3-tooltips__sw" aria-label="${i18n.create}"><svg><use xlink:href="#iconAdd"></use></svg></span>
                     </div>
                     
                     <div class="fn__flex-1 plugin-webapp_custom-dock">
@@ -218,98 +182,77 @@ class WebAppDock {
                                 <svg><use xlink:href="#${
                                   app.iconName
                                 }"></use></svg>
-                                <span style="flex: 1">${app.title}</span>
+                                <span style="flex: 1">${app.title}
+                                ${
+                                  app.script ? `<span class="b3-tooltips b3-tooltips__e"  aria-label="${i18n.hasScript}"><svg><use xlink:href="#iconSparkles"></use></svg></span>` : ''
+                                }
+                                ${
+                                  app.debug ? `<span class="b3-tooltips b3-tooltips__e"  aria-label="${i18n.hasDebug}"><svg><use xlink:href="#iconBug"></use></svg></span>` : ''
+                                }
+                                </span>
                                 ${
                                   plugin.docksConfig.some((v) => v === app.name)
                                     ? ""
-                                    : `<span class="adddock b3-tooltips b3-tooltips__w" aria-label="添加到Dock" data-name="${app.name}"><svg><use xlink:href="#iconDock"></use></svg></span>`
+                                    : `<span class="func-btn adddock b3-tooltips b3-tooltips__w" aria-label="${i18n.addToDock}" data-name="${app.name}"><svg><use xlink:href="#iconDock"></use></svg></span>`
                                 }
                                 ${
                                   plugin.docksConfig.some((v) => v === app.name)
-                                    ? `<span class="deletedock b3-tooltips b3-tooltips__w" aria-label="删除Dock" data-name="${app.name}"><svg><use xlink:href="#iconHideDock"></use></svg></span>`
+                                    ? `<span class="func-btn deletedock b3-tooltips b3-tooltips__w" aria-label="${i18n.deleteDock}" data-name="${app.name}"><svg><use xlink:href="#iconHideDock"></use></svg></span>`
+                                    : ""
+                                }
+                                ${
+                                  plugin.setting.homepage !== app.name
+                                    ? `<span class="func-btn homepageapp b3-tooltips b3-tooltips__w" aria-label="${i18n.setAsHomepage}" data-name="${app.name}"><svg><use xlink:href="#iconLanguage"></use></svg></span>`
                                     : ""
                                 }
                                 ${
                                   app.internal
                                     ? ""
-                                    : `<span class="deleteapp b3-tooltips b3-tooltips__w" aria-label="删除" data-name="${app.name}"><svg><use xlink:href="#iconTrashcan"></use></svg></span>`
+                                    : `<span class="func-btn deleteapp b3-tooltips b3-tooltips__w" aria-label="${i18n.removeApp}" data-name="${app.name}"><svg><use xlink:href="#iconTrashcan"></use></svg></span>`
                                 }
                             </div>`;
                           })
                           .join("")}
                     </div>
                 </div>`;
-          const webapps = this.element.querySelectorAll(".webapp");
-          for (const appEl of webapps) {
-            appEl.addEventListener("click", () => {
-              const app = this.data.apps.find(
-                (v) => v.name === appEl.getAttribute("data-name")
-              );
-              if (app) {
-                app.openTab();
-              }
-            });
-          }
-          const deleteapps = this.element.querySelectorAll(".deleteapp");
-          for (const del of deleteapps) {
-            del.addEventListener("click", (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              let target;
-              const p = e.path || (e.composedPath && e.composedPath());
-              for (const f of p) {
-                if (f.classList.contains("deleteapp")) {
-                  target = f;
-                  break;
+
+          function onClick(element, classname, callback) {
+            const homepageapp = element.querySelectorAll(`.${classname}`);
+            for (const del of homepageapp) {
+              del.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                let target;
+                const p = e.path || (e.composedPath && e.composedPath());
+                for (const f of p) {
+                  if (f.classList.contains(classname)) {
+                    target = f;
+                    break;
+                  }
                 }
-              }
-              if (!target) {
-                return;
-              }
-              const name = target.getAttribute("data-name");
-              plugin.remove(name);
-            });
-          }
-          const adddockapps = this.element.querySelectorAll(".adddock");
-          for (const del of adddockapps) {
-            del.addEventListener("click", (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              let target;
-              const p = e.path || (e.composedPath && e.composedPath());
-              for (const f of p) {
-                if (f.classList.contains("adddock")) {
-                  target = f;
-                  break;
+                if (!target) {
+                  return;
                 }
-              }
-              if (!target) {
-                return;
-              }
-              const name = target.getAttribute("data-name");
-              plugin.initDock(name);
-            });
+                const name = target.getAttribute("data-name");
+                callback(name);
+              });
+            }
           }
-          const removeDockApps = this.element.querySelectorAll(".deletedock");
-          for (const del of removeDockApps) {
-            del.addEventListener("click", (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              let target;
-              const p = e.path || (e.composedPath && e.composedPath());
-              for (const f of p) {
-                if (f.classList.contains("deletedock")) {
-                  target = f;
-                  break;
-                }
-              }
-              if (!target) {
-                return;
-              }
-              const name = target.getAttribute("data-name");
-              plugin.removeDock(name);
-            });
-          }
+          onClick(this.element, "webapp", (name) => {
+            const app = this.data.apps.find((v) => v.name === name);
+            if (app) {
+              app.openTab();
+            }
+          });
+          onClick(this.element, "deleteapp", (name) => plugin.remove(name));
+          onClick(this.element, "adddock", (name) => plugin.initDock(name));
+          onClick(this.element, "deletedock", (name) =>
+            plugin.removeDock(name)
+          );
+          onClick(this.element, "homepageapp", (name) =>
+            plugin.setHomepage(name)
+          );
+
           const add = this.element.querySelector("#add-webapp");
           add.addEventListener("click", () => dock.addWebApp());
         };
@@ -330,11 +273,11 @@ class WebAppDock {
     const dock = this;
     const plugin = this.webAppPlugin;
     const dialog = new Dialog({
-      title: "添加Web应用",
+      title: i18n.dialogAdd,
       content: `
             <div class="b3-dialog__content">
                 <div class="b3-dialog-input">
-                <label for="appname">名称</label>
+                <label for="appname">${i18n.appname}</label>
                 <input class="b3-text-field fn__block" type="input" name="appname" id="appname"/>
                 </div>
                 <div class="b3-dialog-input">
@@ -347,11 +290,11 @@ class WebAppDock {
                 </div>
             </div>
             <div class="b3-dialog__content">
-            <p>使用说明:\n注意：输入名称仅支持英文，url请输入完整https或http协议链接。选择图片尽量为正方形，均完成后点击添加按钮。</p>
+            <p>${i18n.attention}</p>
             </div>
             <div class="b3-dialog__action">
-                <button class="b3-button b3-button--cancel">取消</button><div class="fn__space"></div>
-                <button class="b3-button b3-button--text">添加</button>
+                <button class="b3-button b3-button--cancel">${i18n.cancel}</button><div class="fn__space"></div>
+                <button class="b3-button b3-button--text">${i18n.add}</button>
             </div>`,
       width: "520px",
     });
@@ -416,19 +359,19 @@ const renderView = (context) => {
     `.${context.data.name}__custom-tab`
   );
 
-  function 隐藏遮罩() {
-    panel.querySelector(".ovelayer")
-      ? panel.querySelector(".ovelayer").remove()
+  function hideOverlayer() {
+    panel.querySelector(".overlayer")
+      ? panel.querySelector(".overlayer").remove()
       : null;
   }
-  function 显示遮罩() {
-    if (!panel.querySelector(".ovelayer")) {
+  function showOverLayer() {
+    if (!panel.querySelector(".overlayer")) {
       let div = document.createElement("div");
       div.setAttribute(
         "style",
         `position:absolute;bottom:0;left:0;height:${panel.clientHeight}px;width:100%`
       );
-      div.setAttribute("class", "ovelayer");
+      div.setAttribute("class", "overlayer");
       div.addEventListener("mousedown", () => {
         siyuanMenu.close();
       });
@@ -438,39 +381,48 @@ const renderView = (context) => {
   document.addEventListener(
     "mousedown",
     () => {
-      显示遮罩();
+      showOverLayer();
     },
     true
   );
   document.addEventListener(
     "mouseup",
     () => {
-      隐藏遮罩();
+      hideOverlayer();
     },
     true
   );
 };
+
 
 module.exports = class WebAppPlugin extends Plugin {
   constructor(args) {
     super(args);
     this.webAppDock = new WebAppDock(this);
   }
-  apps = [flomo, cubox, dida, ChatDOC];
+  apps = [flomo, cubox, dida];
+
+  setting = {
+    homepage: "",
+  };
 
   appsConfig = [];
 
   docksConfig = [];
 
   async onload() {
+    Object.assign(i18n, this.i18n);
     this.apps.forEach((app) => (app.internal = true));
     await this.initStorage();
     this.apps.forEach((app) => this.loadApp(app));
     for (const dockname of this.docksConfig) {
       await this.initDock(dockname);
     }
-
     this.webAppDock.refresh();
+  }
+
+  onLayoutReady() {
+    this.initEmptyPage();
   }
 
   async initStorage() {
@@ -485,7 +437,7 @@ module.exports = class WebAppPlugin extends Plugin {
           this.apps.push(new WebApp(conf));
         });
       } catch (e) {
-        console.error("web app 解析失败", e);
+        console.error(this.i18n.parseFail, e);
       }
     }
     const docksConfig = await this.loadData("docks.json");
@@ -494,12 +446,17 @@ module.exports = class WebAppPlugin extends Plugin {
     } else {
       this.docksConfig = docksConfig;
     }
+    const config = await this.loadData("setting.json");
+    if (config) {
+      this.setting = Object.assign(this.setting, config);
+    }
   }
 
   async updateStorage() {
     const s = JSON.stringify(this.appsConfig, null, 2);
     await this.saveData("apps.txt", s);
     await this.saveData("docks.json", this.docksConfig);
+    await this.saveData("setting.json", this.setting);
   }
 
   addApp(options) {
@@ -592,5 +549,52 @@ module.exports = class WebAppPlugin extends Plugin {
       await this.updateStorage();
       window.location.reload();
     }
+  }
+
+  updateEmptyPage(el = document) {
+    const empty = el.querySelector(".layout__empty");
+    if (!empty) {
+      return;
+    }
+    if (this.setting.homepage) {
+      const app = this.apps.find((v) => v.name === this.setting.homepage);
+      if (!app) {
+        return;
+      }
+      renderView({
+        element: empty,
+        data: app,
+      });
+      empty.children[0]?.setAttribute("style", "width: 100%");
+    }
+  }
+
+  async setHomepage(name) {
+    if (this.setting.homepage === name) {
+      this.setting.homepage = '';
+      await this.updateStorage();
+      window.location.reload();
+    } else {
+      this.setting.homepage = name;
+      this.updateStorage();
+      this.updateEmptyPage();
+    }
+  }
+
+  initEmptyPage() {
+    const targetNode = document.querySelector(".layout__center");
+    const config = { attributes: true, childList: true, subtree: true };
+    const callback = (mutationsList, observer) => {
+      // Use traditional 'for loops' for IE 11
+      for (let mutation of mutationsList) {
+        if (mutation.type === "childList") {
+          this.updateEmptyPage(mutation.target);
+        }
+      }
+    };
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+    // one shot update
+    this.updateEmptyPage();
   }
 };
