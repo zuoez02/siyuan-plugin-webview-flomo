@@ -26,8 +26,8 @@ async function readImageAsBase64(fileEl) {
     }
     const file = fileEl.files[0];
     if (!file) {
-      alert(i18n.pleaseChooseImage);
-      reject(false);
+      resolve(null);
+      return;
     }
     if (!/image\/\w+/.test(file.type)) {
       //判断获取的是否为图片文件
@@ -77,6 +77,12 @@ class WebApp {
   }
 
   loadIcon() {
+    if (this.iconName === 'iconHTML5') {
+      return;
+    }
+    if (!this.iconSymbolSize) {
+      return;
+    }
     registerIcon(this.iconName, this.iconSymbolSize, this.iconSvg);
   }
 }
@@ -313,9 +319,9 @@ class WebAppDock {
         const name = nameEl.value;
         const options = {
           name: name,
-          iconName: `icon${name}`,
-          iconSvg: `<image href="${res.url}" />`,
-          iconSymbolSize: res.size,
+          iconName: res ? `icon${name}` : 'iconHTML5',
+          iconSvg: res ? `<image href="${res.url}" />` : '',
+          iconSymbolSize: res ? res.size : 0,
           title: name,
           isTopBar: true,
           topBarPostion: "right",
