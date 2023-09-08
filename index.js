@@ -159,7 +159,7 @@ class WebAppDock {
         position: "LeftBottom",
         size: { width: 200, height: 0 },
         icon: "iconWebApp",
-        title: i18n.title,
+        title: plugin.i18n.title,
       },
       data: {
         apps: this.webAppPlugin.apps,
