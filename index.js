@@ -135,6 +135,36 @@ const dida = new WebApp({
   isTopBar: true,
   topBarPostion: "right",
   url: "https://www.dida365.com",
+  script: `
+  (function(){setInterval(() => {
+    document.querySelectorAll('li.task:not([siyuan-draggable])').forEach((task) => {
+      const siyuanGenContent = (s) => {
+        let checked = ' ';
+        if (s.classList.contains('checked')) {
+          checked = 'x';
+        }
+        return '* [' + checked + '] ' + s.querySelector('.title').textContent;
+      };
+      task.setAttribute('siyuan-draggable', '');
+      task.addEventListener('dragstart', e => {
+        if (task.classList.contains('selected')) {
+          const selected = document.querySelectorAll('li.task.selected');
+          if (selected.length > 1) {
+            const result = [];
+            selected.forEach((s) => {
+              result.push(siyuanGenContent(s));
+            });
+            e.dataTransfer.setData('text/html', result.join('\\n<br>\\n'));
+            return;
+          }
+        }
+        if (content) {
+          e.dataTransfer.setData('text/html',siyuanGenContent(task));
+        }
+      });
+    })
+  }, 500);})()
+`,
 });
 
 class WebAppDock {
