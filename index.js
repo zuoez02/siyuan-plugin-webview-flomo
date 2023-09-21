@@ -158,9 +158,7 @@ const dida = new WebApp({
             return;
           }
         }
-        if (content) {
-          e.dataTransfer.setData('text/html',siyuanGenContent(task));
-        }
+        e.dataTransfer.setData('text/html',siyuanGenContent(task));
       });
     })
   }, 500);})()
