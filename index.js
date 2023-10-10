@@ -528,6 +528,7 @@ module.exports = class WebAppPlugin extends Plugin {
       });
       app.openTab = () =>
         openTab({
+          app: this.app,
           custom: {
             icon: app.iconName,
             title: app.title,
@@ -537,7 +538,7 @@ module.exports = class WebAppPlugin extends Plugin {
               script: app.script,
               debug: app.debug,
             },
-            fn: tab,
+            id: this.name + app.name,
           },
         });
       return;
