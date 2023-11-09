@@ -16,5 +16,9 @@
     "cancel": "Cancel",
     "add": "Add",
     "hasScript": "Has Enhancement Script",
-    "hasDebug": "Debug Mode"
+    "hasDebug": "Debug Mode",
+    "showHide": "Show hidden apps",
+    "hideHidden": "Hide apps",
+    "hideApp": "Hide web app",
+    "showApp": "Show web app"
 }

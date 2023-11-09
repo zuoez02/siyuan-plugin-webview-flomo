@@ -16,5 +16,9 @@
     "cancel": "取消",
     "add": "添加",
     "hasScript": "含增强脚本",
-    "hasDebug": "调试模式"
+    "hasDebug": "调试模式",
+    "showHide": "显示隐藏应用",
+    "hideHidden": "不显示隐藏应用",
+    "hideApp": "隐藏Web应用",
+    "showApp": "取消隐藏Web应用"
 }
