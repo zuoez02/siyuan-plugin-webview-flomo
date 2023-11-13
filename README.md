@@ -34,12 +34,17 @@
     "topBarPostion": "right",
     "url": "https://url.ai-node.com/",
     "script": "alert(123)",
+    "css": "html[siyuan-theme=\"light\"] body { background-color: var(--siyuan-theme); }",
     "debug": true
   }
 ```
 
 ## Changelog
-### v2.5.3
+### v2.7.0
++ 支持配置CSS样式了(详见上方demo)
++ 当配置CSS样式时, 会自动注入css全局变量siyuan-mode(light, dark)和siyuan-theme(当前主题名称), 并在\<html\>上增加siyuan-mode属性，便于CSS过滤使用以适配主题。
+
+### v2.6.0
 + Cubox区分国际版和中国版
 + 支持隐藏Web应用，dock顶端增加按钮控制显示所有隐藏应用
 

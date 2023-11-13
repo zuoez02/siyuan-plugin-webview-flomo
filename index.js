@@ -57,6 +57,7 @@ class WebApp {
   isTopBar = false;
   topBarPostion = "right";
   script = "";
+  css = "";
   url = "";
   debug = false;
 
@@ -70,6 +71,7 @@ class WebApp {
     this.topBarPostion = options.topBarPostion || "right";
     this.url = options.url || "";
     this.script = options.script || "";
+    this.css = options.css || "";
     this.loadIcon();
     this.debug = options.debug || false;
   }
@@ -227,6 +229,9 @@ class WebAppDock {
                                 <span style="flex: 1">${app.title}
                                 ${
                                   app.script ? `<span class="b3-tooltips b3-tooltips__e"  aria-label="${i18n.hasScript}"><svg><use xlink:href="#iconSparkles"></use></svg></span>` : ''
+                                }
+                                ${
+                                  app.css ? `<span class="b3-tooltips b3-tooltips__e"  aria-label="${i18n.hasCss}"><svg><use xlink:href="#iconTheme"></use></svg></span>` : ''
                                 }
                                 ${
                                   app.debug ? `<span class="b3-tooltips b3-tooltips__e"  aria-label="${i18n.hasDebug}"><svg><use xlink:href="#iconBug"></use></svg></span>` : ''
@@ -436,6 +441,20 @@ const renderView = (context) => {
     });
   }
 
+  if (context.data.css) {
+    webview.addEventListener("load-commit", () => {
+      const mode = window.siyuan.config.appearance.mode === 0 ? 'light' : 'dark';
+      webview.executeJavaScript(`document.getElementsByTagName('html')[0].setAttribute('siyuan-theme', '${mode}')`).then(() => {
+        webview.insertCSS(`:root {
+          --siyuan-mode: ${mode};
+          --siyuan-theme: ${window.siyuan.config.appearance.mode === 0 ? window.siyuan.config.appearance.themeLight : window.siyuan.config.appearance.themeDark };
+        }`).then(() => {
+          webview.insertCSS(context.data.css)
+        }); 
+      });
+    });
+  }
+
   if (context.data.debug) {
     webview.addEventListener("dom-ready", () => {
       webview.openDevTools();
@@ -591,6 +610,7 @@ module.exports = class WebAppPlugin extends Plugin {
               name: app.name,
               url: app.url,
               script: app.script,
+              css: app.css,
               debug: app.debug,
             },
             id: this.name + app.name,
@@ -616,6 +636,7 @@ module.exports = class WebAppPlugin extends Plugin {
         name: app.name,
         url: app.url,
         script: app.script,
+        css: app.css,
         debug: app.debug,
       },
       type: `${this.name}_${app.name}`,

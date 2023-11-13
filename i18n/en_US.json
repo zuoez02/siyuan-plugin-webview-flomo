@@ -16,6 +16,7 @@
     "cancel": "Cancel",
     "add": "Add",
     "hasScript": "Has Enhancement Script",
+    "hasCss": "Contain custom stylesheet",
     "hasDebug": "Debug Mode",
     "showHide": "Show hidden apps",
     "hideHidden": "Hide apps",
