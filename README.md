@@ -20,7 +20,7 @@
 ### 自定义
 
 1. 点击右上角添加，输入名称请勿带有空格和特殊符号。
-2. 支持自定义脚本和debug模式，需添加完成后手动在`工作空间目录/data/storage/petal/siyuan-plugin-webapp/app.txt`中修改json，添加script字段和debug字段
+2. 支持自定义脚本、CSS和debug模式，需添加完成后手动在`工作空间目录/data/storage/petal/siyuan-plugin-webapp/app.txt`中修改json，添加script字段、CSS字段和debug字段
 
 ## Example
 ```json
