@@ -18,8 +18,10 @@
     "hasScript": "Has Enhancement Script",
     "hasCss": "Contain custom stylesheet",
     "hasDebug": "Debug Mode",
-    "showHide": "Show hidden apps",
+    "showHidden": "Show hidden apps",
     "hideHidden": "Hide apps",
     "hideApp": "Hide web app",
-    "showApp": "Show web app"
+    "showApp": "Show web app",
+    "warning": "Warning",
+    "confirmDelete": "Are you sure to delete this app?"
 }

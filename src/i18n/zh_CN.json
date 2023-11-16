@@ -18,8 +18,10 @@
     "hasScript": "含增强脚本",
     "hasCss": "含自定义样式",
     "hasDebug": "调试模式",
-    "showHide": "显示隐藏应用",
+    "showHidden": "显示隐藏应用",
     "hideHidden": "不显示隐藏应用",
     "hideApp": "隐藏Web应用",
-    "showApp": "取消隐藏Web应用"
+    "showApp": "取消隐藏Web应用",
+    "warning": "警告",
+    "confirmDelete": "确认删除此应用吗?"
 }

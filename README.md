@@ -40,6 +40,9 @@
 ```
 
 ## Changelog
+### v3.0.0
++ 工程化重构
+
 ### v2.7.0
 + 支持配置CSS样式了(详见上方demo)
 + 当配置CSS样式时, 会自动注入css全局变量siyuan-mode(light, dark)和siyuan-theme(当前主题名称), 并在\<html\>上增加siyuan-mode属性，便于CSS过滤使用以适配主题。
