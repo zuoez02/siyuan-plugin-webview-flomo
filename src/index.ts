@@ -118,11 +118,7 @@ export default class WebAppPlugin extends Plugin {
             icon: app.iconName,
             title: app.title,
             data: {
-              name: app.name,
-              url: app.url,
-              script: app.script,
-              css: app.css,
-              debug: app.debug,
+              ...app,
             },
             id: this.name + app.name,
           },

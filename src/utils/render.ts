@@ -1,6 +1,7 @@
+import { WebApp } from '@/WebApp';
 import type { WebviewTag } from 'electron';
 
-export const renderView = (context: { element: Element, data: any }) => {
+export const renderView = (context: { element: Element, data: WebApp }) => {
   /**
    * Browserview Implement
    */
@@ -32,13 +33,19 @@ export const renderView = (context: { element: Element, data: any }) => {
          <span id="refresh">刷新</span>
       </div>
       -->
-      <webview allowfullscreen allowpopups style="border: none" class="fn__flex-column fn__flex  fn__flex-1" src="${context.data.url}"></webview>
+      <webview allowfullscreen allowpopups style="border: none" class="fn__flex-column fn__flex  fn__flex-1" src="${context.data.url}"
+        ${context.data.proxy ? 'partition="' + context.data.name + '"' : ''}></webview>
   </div>`;
   const webview = context.element.querySelector("webview") as WebviewTag;
 
-  // context.element.querySelector('#refresh').addEventListener('click', () => {
-  //   webview.reload();
-  // })
+  if (context.data.proxy) {
+    const session = window.require('@electron/remote').session.fromPartition(context.data.name);
+    if (session) {
+      session.setProxy({
+        proxyRules: context.data.proxy,
+      })
+    }
+  }
 
   if (context.data.script) {
     webview.addEventListener("load-commit", () => {

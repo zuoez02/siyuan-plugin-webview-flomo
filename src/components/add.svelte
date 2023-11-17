@@ -6,6 +6,7 @@
   let appname = "";
   let appurl = "";
   let appfile = null;
+  let appproxy = "";
 
   const cancel = () => {
     reject();
@@ -24,6 +25,7 @@
         isTopBar: true,
         topBarPostion: "right",
         url: appurl,
+        proxy: appproxy,
       };
       plugin.addApp(options);
       dialog.destroy();
@@ -59,6 +61,16 @@
       name="appurl"
       id="appurl"
       bind:value={appurl}
+    />
+  </div>
+  <div class="b3-dialog-input">
+    <label for="appproxy">Proxy</label>
+    <input
+      class="b3-text-field fn__block"
+      type="input"
+      name="appproxy"
+      id="appproxy"
+      bind:value={appproxy}
     />
   </div>
   <div class="b3-dialog-input">
