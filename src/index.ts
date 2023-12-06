@@ -40,7 +40,7 @@ export default class WebAppPlugin extends Plugin {
       this.appsConfig[i] = app;
       const s = JSON.stringify(this.appsConfig, null, 2);
       await this.saveData("apps.txt", s);
-      showMessage(`Update app ${app.name}`);
+      showMessage(`Update app ${app.title}`);
     }
   }
 
