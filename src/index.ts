@@ -1,4 +1,4 @@
-import { Plugin, confirm, openTab } from "siyuan";
+import { Plugin, confirm, openTab, showMessage } from "siyuan";
 import { WebAppDock } from "./WebAppDock";
 import { flomo } from "./apps/flomo";
 import { cubox, cuboxPro } from "./apps/cubox";
@@ -32,6 +32,16 @@ export default class WebAppPlugin extends Plugin {
       await this.initDock(dockname);
     }
     this.webAppDock = new WebAppDock(this);
+  }
+
+  async updateApp(app: WebApp) {
+    let i = this.appsConfig.findIndex((v) => v.name === app.name);
+    if (i >= 0) {
+      this.appsConfig[i] = app;
+      const s = JSON.stringify(this.appsConfig, null, 2);
+      await this.saveData("apps.txt", s);
+      showMessage(`Update app ${app.name}`);
+    }
   }
 
   onLayoutReady() {

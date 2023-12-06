@@ -93,6 +93,10 @@
   };
 
   const onContextMenu = (event: MouseEvent, app: WebApp) => {
+    const forbidden = ['flomo', 'cubox', 'cuboxChina', 'dida'];
+    if (forbidden.indexOf(app.name) > -1) {
+      return;
+    }
     let pos = {
       x: event.clientX,
       y: event.clientY,
@@ -104,10 +108,12 @@
       icon: 'iconTheme',
       click: () => {
         console.log('click', app);
-        const dialog = new SettingDialog(app, (title: string, css: string) =>{
+        const dialog = new SettingDialog(app, (title: string, css: string, script: string) =>{
           app.title = title;
           app.css = css;
+          app.script = script;
           shownApps = shownApps; //刷新
+          plugin.updateApp(app);
         });
         dialog.show();
       }

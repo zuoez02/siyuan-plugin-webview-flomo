@@ -6,7 +6,7 @@ export class SettingDialog {
     setting: Setting;
     app: WebApp;
 
-    constructor(app: WebApp, callback?: (title: string, css: string) => void) {
+    constructor(app: WebApp, callback?: (title: string, css: string, script: string) => void) {
         this.app = app;
         this.setting = new Setting({
             height: '500px',
@@ -14,9 +14,9 @@ export class SettingDialog {
             confirmCallback: async () => {
                 const title = eleTitle.value;
                 const css = eleCss.value;
-                // const script = eleJs.value;
+                const script = eleJs.value;
                 if (callback) {
-                    callback(title, css);
+                    callback(title, css, script);
                 }
             }
         });
@@ -25,7 +25,7 @@ export class SettingDialog {
         //@ts-ignore
         const eleCss: HTMLInputElement = this.addItem('CSS代码', '插入的自定义 CSS 样式', 'textarea', this.app.css);
         //@ts-ignore
-        // const eleJs: HTMLTextAreaElement = this.addItem('Js代码', '插入的自定义 Js 代码', 'textarea', this.app.script);
+        const eleJs: HTMLTextAreaElement = this.addItem('Js代码', '插入的自定义 Js 代码', 'textarea', this.app.script);
     }
 
     show() {
