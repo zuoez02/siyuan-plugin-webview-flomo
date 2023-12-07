@@ -3,8 +3,9 @@
   import WebAppPlugin from "..";
   import { onMount } from "svelte";
   import { WebApp } from "@/WebApp";
-  import { Dialog } from "siyuan";
+  import { Dialog, Menu } from "siyuan";
   import Add from "./add.svelte";
+  import { SettingDialog } from "./setting-dialog";
 
   let showHidden = false;
   let hidden: string[] = [];
@@ -91,6 +92,35 @@
     homepage = app.name;
   };
 
+  const onContextMenu = (event: MouseEvent, app: WebApp) => {
+    const forbidden = ['flomo', 'cubox', 'cuboxChina', 'dida'];
+    if (forbidden.indexOf(app.name) > -1) {
+      return;
+    }
+    let pos = {
+      x: event.clientX,
+      y: event.clientY,
+    };
+    console.log(pos);
+    const menu = new Menu('webapp-config');
+    menu.addItem({
+      label: "自定义配置",
+      icon: 'iconTheme',
+      click: () => {
+        console.log('click', app);
+        const dialog = new SettingDialog(app, (title: string, css: string, script: string) =>{
+          app.title = title;
+          app.css = css;
+          app.script = script;
+          shownApps = shownApps; //刷新
+          plugin.updateApp(app);
+        });
+        dialog.show();
+      }
+    });
+    menu.open(pos);
+  }
+
   export let plugin: WebAppPlugin;
 </script>
 
@@ -129,6 +159,7 @@
         class="webapp"
         style="display: flex; align-items: center; gap: 3px;"
         data-name={app.name}
+        on:contextmenu={(e) => {onContextMenu(e, app)}}
       >
         <svg><use xlink:href={"#" + app.iconName} /></svg>
         <span style="flex: 1">
