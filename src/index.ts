@@ -1,4 +1,4 @@
-import { Plugin, confirm, openTab, showMessage } from "siyuan";
+import siyuan, { Plugin, confirm, openTab, showMessage } from "siyuan";
 import { WebAppDock } from "./WebAppDock";
 import { flomo } from "./apps/flomo";
 import { cubox, cuboxPro } from "./apps/cubox";
@@ -6,10 +6,14 @@ import { dida } from "./apps/dida";
 import { i18n } from "./utils";
 import { WebApp } from "./WebApp";
 import { renderView } from "./utils/render";
+import * as sdk from "@siyuan-community/siyuan-sdk";
 import "./index.scss";
 
 export default class WebAppPlugin extends Plugin {
+  siyuan = siyuan;
   webAppDock: WebAppDock;
+  
+  client = new sdk.Client(undefined, 'fetch');
 
   apps = [flomo, cubox, cuboxPro, dida];
 
@@ -31,7 +35,7 @@ export default class WebAppPlugin extends Plugin {
     for (const dockname of this.docksConfig) {
       await this.initDock(dockname);
     }
-    this.webAppDock = new WebAppDock(this);
+    this.webAppDock = new WebAppDock(this);  
   }
 
   async updateApp(app: WebApp) {
@@ -114,11 +118,12 @@ export default class WebAppPlugin extends Plugin {
   }
 
   loadApp(app: WebApp) {
+    const plugin = this;
     if (app.isTopBar) {
       this.addTab({
         type: app.name,
         init() {
-          renderView(this);
+          renderView(this, plugin);
         },
       });
       app.openTab = () =>
@@ -129,6 +134,7 @@ export default class WebAppPlugin extends Plugin {
             title: app.title,
             data: {
               ...app,
+              i18n: this.i18n,
             },
             id: this.name + app.name,
           },
@@ -138,6 +144,7 @@ export default class WebAppPlugin extends Plugin {
   }
 
   async initDock(dockname) {
+    const plugin = this;
     const app = this.apps.find((d) => d.name === dockname);
     if (!app) {
       return null;
@@ -158,7 +165,7 @@ export default class WebAppPlugin extends Plugin {
       },
       type: `${this.name}_${app.name}`,
       init() {
-        renderView(this);
+        renderView(this, plugin);
       },
     });
     if (this.docksConfig.find((a) => a === app.name)) {
@@ -209,7 +216,7 @@ export default class WebAppPlugin extends Plugin {
       renderView({
         element: empty,
         data: app,
-      });
+      }, this);
       empty.children[0]?.setAttribute("style", "width: 100%");
     }
   }

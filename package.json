@@ -5,7 +5,7 @@
   "repository": "",
   "homepage": "",
   "author": "",
-  "license": "MIT",
+  "license": "AGPL-3.0",
   "scripts": {
     "make-link": "node  --no-warnings ./scripts/make_dev_link.js",
     "dev": "vite build --watch",
@@ -30,6 +30,7 @@
     "vite-plugin-zip-pack": "^1.0.5"
   },
   "dependencies": {
+    "@siyuan-community/siyuan-sdk": "^0.3.5",
     "electron-context-menu": "^3.6.1"
   }
 }
