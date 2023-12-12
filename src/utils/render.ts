@@ -47,11 +47,14 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
       -->
       <webview allowfullscreen allowpopups style="border: none" class="fn__flex-column fn__flex  fn__flex-1" src="${context.data.url}"
         ${context.data.proxy ? 'partition="' + context.data.name + '"' : ''}></webview>
+      <div class="webapp-view-cover fn__none" style="position: absolute; top: 0; left: 0; height: 100%; width: 100%;"></div>
   </div>`;
   const webview = context.element.querySelector("webview") as any;
+  const cover = context.element.querySelector('.webapp-view-cover');
+  let menu;
   // const plugin = context.plugin;
   const i18n = plugin.i18n;
-  let menu;
+
   webview?.addEventListener?.("context-menu", e => {
     const { params } = e;
     const title = params.titleText || params.linkText || params.altText || params.suggestedFilename;
@@ -572,12 +575,13 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
 
     const _items = washMenuItems(items);
     if (_items.length > 0) {
-      menu = new siyuan.Menu();
+      menu = new siyuan.Menu('webviewContextMenu', () => cover.classList.add('fn__none'));
       _items.forEach(item => menu.addItem(item));
       menu.open({
         x: params.x,
         y: params.y,
       });
+      cover.classList.remove('fn__none')
     }
   });
 
@@ -637,7 +641,7 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
       );
       div.setAttribute("class", "overlayer");
       div.addEventListener("mousedown", () => {
-        //   siyuanMenu.close();
+          menu && menu.close();
       });
       panel.appendChild(div);
     }
@@ -645,6 +649,7 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
   document.addEventListener(
     "mousedown",
     () => {
+      menu && menu.close();
       showOverLayer();
     },
     true
