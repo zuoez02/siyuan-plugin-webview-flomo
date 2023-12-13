@@ -6,21 +6,76 @@
   import { Dialog, Menu } from "siyuan";
   import Add from "./add.svelte";
   import { SettingDialog } from "./setting-dialog";
+  import { Tree } from "siyuan-kit-svelte";
 
   let showHidden = false;
   let hidden: string[] = [];
   let apps: WebApp[] = [];
-  let homepage = "";
 
   $: shownApps = apps.filter(
     (v) => showHidden || hidden.every((g) => g !== v.name)
   );
+
+  $: treeNodes = shownApps.map((v) => ({ ...v, nodeId: v.name, icon: v.iconName }));
 
   $: hiddenBtnLabel = showHidden ? i18n.hideHidden : i18n.showHidden;
 
   $: hiddenBtnIcon = showHidden ? "#iconEyeoff" : "#iconEye";
 
   const isInDock = (name: string) => plugin.docksConfig.some((v) => v === name);
+
+  const actions = (app: WebApp) => {
+    const result = [];
+    if (isInDock(app.name)) {
+      result.push({
+        type: "removeDock",
+        icon: "iconHideDock",
+        title: i18n.deleteDock,
+        callback: (app) => {
+          removeDock(app);
+        },
+      });
+    } else {
+      result.push({
+        type: "addDock",
+        icon: "iconDock",
+        title: i18n.addToDock,
+        callback: (app) => {
+          addDock(app);
+        },
+      });
+    }
+    result.push({
+      type: "homepage",
+      icon: "iconLanguage",
+      title: i18n.setAsHomepage,
+      callback: (app) => setHomepage(app),
+    });
+    if (!app.internal) {
+      result.push({
+        type: "deleteapp",
+        icon: "iconTrashcan",
+        title: i18n.removeApp,
+        callback: (app) => deleteApp(app),
+      });
+    }
+    if (hidden.indexOf(app.name) > -1) {
+      result.push({
+        type: "showApp",
+        icon: "iconEye",
+        title: i18n.showApp,
+        callback: (app) => showApp(app),
+      });
+    } else {
+      result.push({
+        type: "hideApp",
+        icon: "iconEyeoff",
+        title: i18n.hideApp,
+        callback: (app) => hideApp(app),
+      });
+    }
+    return result;
+  };
 
   onMount(() => {
     loadDataFromPlugin();
@@ -59,7 +114,6 @@
     apps = [...plugin.apps];
     showHidden = plugin.settingConfig.showHidden;
     hidden = plugin.settingConfig.hidden;
-    homepage = plugin.settingConfig.homepage;
   };
 
   const deleteApp = (app: WebApp) => {
@@ -89,11 +143,10 @@
 
   const setHomepage = (app) => {
     plugin.setHomepage(app.name);
-    homepage = app.name;
   };
 
   const onContextMenu = (event: MouseEvent, app: WebApp) => {
-    const forbidden = ['flomo', 'cubox', 'cuboxChina', 'dida'];
+    const forbidden = ["flomo", "cubox", "cuboxChina", "dida"];
     if (forbidden.indexOf(app.name) > -1) {
       return;
     }
@@ -101,25 +154,26 @@
       x: event.clientX,
       y: event.clientY,
     };
-    console.log(pos);
-    const menu = new Menu('webapp-config');
+    const menu = new Menu("webapp-config");
     menu.addItem({
       label: "自定义配置",
-      icon: 'iconTheme',
+      icon: "iconTheme",
       click: () => {
-        console.log('click', app);
-        const dialog = new SettingDialog(app, (title: string, css: string, script: string) =>{
-          app.title = title;
-          app.css = css;
-          app.script = script;
-          shownApps = shownApps; //刷新
-          plugin.updateApp(app);
-        });
+        const dialog = new SettingDialog(
+          app,
+          (title: string, css: string, script: string) => {
+            app.title = title;
+            app.css = css;
+            app.script = script;
+            shownApps = shownApps; //刷新
+            plugin.updateApp(app);
+          }
+        );
         dialog.show();
-      }
+      },
     });
     menu.open(pos);
-  }
+  };
 
   export let plugin: WebAppPlugin;
 </script>
@@ -154,88 +208,35 @@
   </div>
 
   <div class="fn__flex-1 plugin-webapp_custom-dock">
-    {#each shownApps as app}
+    <Tree bind:treeNodes {actions} hideActions hideArrowWhenOnlyOneLevel={true}>
       <div
-        class="webapp"
-        style="display: flex; align-items: center; gap: 3px;"
-        data-name={app.name}
-        on:contextmenu={(e) => {onContextMenu(e, app)}}
+        slot="title"
+        let:node={app}
+        on:contextmenu={(e) => {
+          onContextMenu(e, app);
+        }}
       >
-        <svg><use xlink:href={"#" + app.iconName} /></svg>
         <span style="flex: 1">
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <span on:click={() => openTab(app)}>{app.title}</span>
           {#if app.script}
             <span class="b3-tooltips b3-tooltips__e" aria-label={i18n.hasScript}
-              ><svg><use xlink:href="#iconSparkles" /></svg></span
+              ><svg class="inline-icon"><use xlink:href="#iconSparkles" /></svg></span
             >
           {/if}
           {#if app.css}
             <span class="b3-tooltips b3-tooltips__e" aria-label={i18n.hasCss}
-              ><svg><use xlink:href="#iconTheme" /></svg></span
+              ><svg class="inline-icon"><use xlink:href="#iconTheme" /></svg></span
             >
           {/if}
           {#if app.debug}
             <span class="b3-tooltips b3-tooltips__e" aria-label={i18n.hasDebug}
-              ><svg><use xlink:href="#iconBug" /></svg></span
+              ><svg class="inline-icon"><use xlink:href="#iconBug" /></svg></span
             >
           {/if}
         </span>
-        {#if isInDock(app.name)}
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <span
-            class="func-btn b3-tooltips b3-tooltips__w"
-            on:click={() => removeDock(app)}
-            aria-label={i18n.deleteDock}
-            data-name={app.name}
-            ><svg><use xlink:href="#iconHideDock" /></svg></span
-          >
-        {:else}
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <span
-            class="func-btn b3-tooltips b3-tooltips__w"
-            on:click={() => addDock(app)}
-            aria-label={i18n.addToDock}
-            data-name={app.name}><svg><use xlink:href="#iconDock" /></svg></span
-          >
-        {/if}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span
-          class="func-btn homepageapp b3-tooltips b3-tooltips__w"
-          on:click={() => setHomepage(app)}
-          aria-label={i18n.setAsHomepage}
-          data-name={app.name}
-          ><svg><use xlink:href="#iconLanguage" /></svg></span
-        >
-        {#if !app.internal}
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <span
-            class="func-btn deleteapp b3-tooltips b3-tooltips__w"
-            on:click={() => deleteApp(app)}
-            aria-label={i18n.removeApp}
-            data-name={app.name}
-            ><svg><use xlink:href="#iconTrashcan" /></svg></span
-          >
-        {/if}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        {#if hidden.indexOf(app.name) > -1}
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <span
-            on:click={() => showApp(app)}
-            class="func-btn b3-tooltips b3-tooltips__w"
-            aria-label={i18n.showApp}
-            data-name={app.name}><svg><use xlink:href="#iconEye" /></svg></span
-          >
-        {:else}
-          <span
-            on:click={() => hideApp(app)}
-            class="func-btn b3-tooltips b3-tooltips__w"
-            aria-label={i18n.hideApp}
-            data-name={app.name}
-            ><svg><use xlink:href="#iconEyeoff" /></svg></span
-          >
-        {/if}
       </div>
-    {/each}
+    </Tree>
+
   </div>
 </div>

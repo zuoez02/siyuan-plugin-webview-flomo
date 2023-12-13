@@ -1,5 +1,6 @@
 .plugin-webapp_custom-dock {
   padding: 0px;
+  overflow: visible;
 }
 
 .plugin-webapp_custom-dock .webapp {
@@ -27,6 +28,11 @@
   width: 14px;
   height: 14px;
   margin-right: 6px;
+}
+
+.inline-icon {
+  width: 14px;
+  height: 14px;
 }
 
 .webapp-view {
