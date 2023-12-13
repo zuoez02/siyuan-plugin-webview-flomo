@@ -8,6 +8,8 @@ import { WebApp } from "./WebApp";
 import { renderView } from "./utils/render";
 import * as sdk from "@siyuan-community/siyuan-sdk";
 import "./index.scss";
+import { CustomBlockManager } from "siyuan-package-custom-block";
+import { WebAppViewBlock } from "./utils/viewblock";
 
 export default class WebAppPlugin extends Plugin {
   siyuan = siyuan;
@@ -28,6 +30,9 @@ export default class WebAppPlugin extends Plugin {
   docksConfig = [];
 
   async onload() {
+    CustomBlockManager.init(this);
+    CustomBlockManager.load(WebAppViewBlock);
+  
     Object.assign(i18n, this.i18n);
     this.apps.forEach((app) => (app.internal = true));
     await this.initStorage();

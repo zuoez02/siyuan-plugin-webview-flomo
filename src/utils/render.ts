@@ -53,7 +53,7 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
   const cover = context.element.querySelector('.webapp-view-cover');
   let menu;
   // const plugin = context.plugin;
-  const i18n = plugin.i18n;
+  const i18n = plugin?.i18n;
 
   webview?.addEventListener?.("context-menu", e => {
     const { params } = e;
@@ -363,6 +363,9 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
           click: () => {
             setTimeout(async () => {
               try {
+                if (!plugin) {
+                  return;
+                }
                 const response = await plugin.client.forwardProxy({
                   headers: [],
                   method: "GET",

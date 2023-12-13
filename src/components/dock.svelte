@@ -7,6 +7,7 @@
   import Add from "./add.svelte";
   import { SettingDialog } from "./setting-dialog";
   import { Tree } from "siyuan-kit-svelte";
+  import { createWebappViewBlock } from "@/utils/viewblock";
 
   let showHidden = false;
   let hidden: string[] = [];
@@ -74,6 +75,12 @@
         callback: (app) => hideApp(app),
       });
     }
+    result.push({
+      type: 'copyWebviewBlock',
+      icon: 'iconCopy',
+      title: 'copyWebviewBlock',
+      callback: (app) => copyWebviewBlock(app),
+    })
     return result;
   };
 
@@ -144,6 +151,10 @@
   const setHomepage = (app) => {
     plugin.setHomepage(app.name);
   };
+
+  const copyWebviewBlock = (app) => {
+    createWebappViewBlock(app);
+  }
 
   const onContextMenu = (event: MouseEvent, app: WebApp) => {
     const forbidden = ["flomo", "cubox", "cuboxChina", "dida"];
