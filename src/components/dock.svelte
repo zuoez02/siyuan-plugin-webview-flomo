@@ -17,7 +17,11 @@
     (v) => showHidden || hidden.every((g) => g !== v.name)
   );
 
-  $: treeNodes = shownApps.map((v) => ({ ...v, nodeId: v.name, icon: v.iconName }));
+  $: treeNodes = shownApps.map((v) => ({
+    ...v,
+    nodeId: v.name,
+    icon: v.iconName,
+  }));
 
   $: hiddenBtnLabel = showHidden ? i18n.hideHidden : i18n.showHidden;
 
@@ -76,11 +80,11 @@
       });
     }
     result.push({
-      type: 'copyWebviewBlock',
-      icon: 'iconCopy',
+      type: "copyWebviewBlock",
+      icon: "iconCopy",
       title: i18n.copyWebviewBlock,
       callback: (app) => copyWebviewBlock(app),
-    })
+    });
     return result;
   };
 
@@ -154,7 +158,7 @@
 
   const copyWebviewBlock = (app) => {
     createWebappViewBlock(app);
-  }
+  };
 
   const onContextMenu = (event: MouseEvent, app: WebApp) => {
     const forbidden = ["flomo", "cubox", "cuboxChina", "dida"];
@@ -231,23 +235,25 @@
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <span on:click={() => openTab(app)}>{app.title}</span>
           {#if app.script}
-            <span class="b3-tooltips b3-tooltips__s" aria-label={i18n.hasScript}
-              ><svg class="inline-icon"><use xlink:href="#iconSparkles" /></svg></span
+            <span
+              ><svg class="inline-icon"><use xlink:href="#iconSparkles" /></svg
+              ></span
             >
           {/if}
           {#if app.css}
-            <span class="b3-tooltips b3-tooltips__s" aria-label={i18n.hasCss}
-              ><svg class="inline-icon"><use xlink:href="#iconTheme" /></svg></span
+            <span
+              ><svg class="inline-icon"><use xlink:href="#iconTheme" /></svg
+              ></span
             >
           {/if}
           {#if app.debug}
-            <span class="b3-tooltips b3-tooltips__s" aria-label={i18n.hasDebug}
-              ><svg class="inline-icon"><use xlink:href="#iconBug" /></svg></span
+            <span
+              ><svg class="inline-icon"><use xlink:href="#iconBug" /></svg
+              ></span
             >
           {/if}
         </span>
       </div>
     </Tree>
-
   </div>
 </div>
