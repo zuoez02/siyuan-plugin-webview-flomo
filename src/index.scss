@@ -1,6 +1,10 @@
 .plugin-webapp_custom-dock {
   padding: 0px;
   overflow: visible;
+
+  .b3-list-item__text {
+    overflow: visible !important;
+  }
 }
 
 .plugin-webapp_custom-dock .webapp {

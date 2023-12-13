@@ -8,7 +8,6 @@ export class WebAppViewBlock extends CustomBlock {
 
     static css = `
     .webapp-view {
-        height: 500px;
         width: 100%;
     }
     .fn__none {
@@ -20,16 +19,25 @@ export class WebAppViewBlock extends CustomBlock {
     }
     `
 
-    onMount(el: HTMLElement, data: any): void {
+    onMount(el: HTMLElement, data: { height: number, app: WebApp }, plugin: WebAppPlugin): void {
         const context = { element: el, data: data.app };
-        renderView(context, null);
+        renderView(context, plugin);
+        el.querySelector('.webapp-view').setAttribute('style', `height: ${data.height}px`);
     }
 }
 
 
 export function createWebappViewBlock(app: WebApp) {
     const content = CustomBlockManager.buildBlock(WebAppViewBlock.type, {
-       app,
+        height: 500,
+        app: {
+            name: app.name,
+            url: app.url,
+            proxy: app.proxy,
+            script: app.script,
+            css: app.css,
+            debug: app.debug,
+        },
     });
     navigator.clipboard.writeText(content);
 }

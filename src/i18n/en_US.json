@@ -24,6 +24,7 @@
     "showApp": "Show web app",
     "warning": "Warning",
     "confirmDelete": "Are you sure to delete this app?",
+    "copyWebviewBlock": "Copy WebApp as Block",
     "menu": {
         "copyAlt": {
             "label": "Copy Description"

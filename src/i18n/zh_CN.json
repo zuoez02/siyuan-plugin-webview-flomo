@@ -24,6 +24,7 @@
     "showApp": "取消隐藏Web应用",
     "warning": "警告",
     "confirmDelete": "确认删除此应用吗?",
+    "copyWebviewBlock": "复制为自定义块",
     "menu": {
         "copyAlt": {
             "label": "复制描述"
