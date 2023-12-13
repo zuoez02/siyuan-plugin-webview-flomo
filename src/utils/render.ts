@@ -40,11 +40,6 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
    */
   context.element.innerHTML = `
   <div style="display: flex" class="webapp-view fn__flex-column fn__flex fn__flex-1 ${context.data.name}__custom-tab">
-      <!--
-      <div id="controller" style="position: absolute; left: 0; top: 0;">
-         <span id="refresh">刷新</span>
-      </div>
-      -->
       <webview allowfullscreen allowpopups style="border: none" class="fn__flex-column fn__flex  fn__flex-1" src="${context.data.url}"
         ${context.data.proxy ? 'partition="' + context.data.name + '"' : ''}></webview>
       <div class="webapp-view-cover fn__none" style="position: absolute; top: 0; left: 0; height: 100%; width: 100%;"></div>
@@ -54,7 +49,6 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
   let menu;
   // const plugin = context.plugin;
   const i18n = plugin?.i18n;
-
   webview?.addEventListener?.("context-menu", e => {
     const { params } = e;
     const title = params.titleText || params.linkText || params.altText || params.suggestedFilename;
@@ -625,43 +619,4 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
       webview.openDevTools();
     });
   }
-
-  const panel = context.element.querySelector(
-    `.${context.data.name}__custom-tab`
-  );
-
-  function hideOverlayer() {
-    panel.querySelector(".overlayer")
-      ? panel.querySelector(".overlayer").remove()
-      : null;
-  }
-  function showOverLayer() {
-    if (!panel.querySelector(".overlayer")) {
-      let div = document.createElement("div");
-      div.setAttribute(
-        "style",
-        `position:absolute;bottom:0;left:0;height:${panel.clientHeight}px;width:100%`
-      );
-      div.setAttribute("class", "overlayer");
-      div.addEventListener("mousedown", () => {
-          menu && menu.close();
-      });
-      panel.appendChild(div);
-    }
-  }
-  document.addEventListener(
-    "mousedown",
-    () => {
-      menu && menu.close();
-      showOverLayer();
-    },
-    true
-  );
-  document.addEventListener(
-    "mouseup",
-    () => {
-      hideOverlayer();
-    },
-    true
-  );
 };
