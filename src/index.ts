@@ -124,12 +124,16 @@ export default class WebAppPlugin extends Plugin {
 
   loadApp(app: WebApp) {
     const plugin = this;
+    let disconnect;
     if (app.isTopBar) {
       this.addTab({
         type: app.name,
         init() {
-          renderView(this, plugin);
+          disconnect = renderView(this, plugin);
         },
+        beforeDestroy() {
+          disconnect && disconnect();
+        }
       });
       app.openTab = () =>
         openTab({
@@ -154,6 +158,7 @@ export default class WebAppPlugin extends Plugin {
     if (!app) {
       return null;
     }
+    let disconnect;
     this.addDock({
       config: {
         position: "RightTop",
@@ -170,7 +175,10 @@ export default class WebAppPlugin extends Plugin {
       },
       type: `${this.name}_${app.name}`,
       init() {
-        renderView(this, plugin);
+        disconnect = renderView(this, plugin);
+      },
+      destroy() {
+        disconnect && disconnect();
       },
     });
     if (this.docksConfig.find((a) => a === app.name)) {

@@ -46,6 +46,38 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
   </div>`;
   const webview = context.element.querySelector("webview") as any;
   const cover = context.element.querySelector('.webapp-view-cover');
+  let startDrag = false;
+  function onDragStart(e) {
+    const el = e.target;
+    if (!el) {
+      return;
+    }
+    if (el.getAttribute('data-type') === 'tab-header' || el.parentElement.getAttribute('data-type') === 'tab-header') {
+      startDrag = true;
+      cover.classList.remove('fn__none');
+    }
+  }
+  function onDragStop() {
+    startDrag = false;
+    cover.classList.add('fn__none');  
+  }
+  function onResizeStart(e) {
+    if (e.target.classList.contains('layout__resize')) {
+      startDrag = true;
+      cover.classList.remove('fn__none');
+    }
+  }
+  function onResizeStop(e) {
+    if (e.target.classList.contains('layout__resize')) {
+      startDrag = false;
+      cover.classList.add('fn__none');
+    }
+  }
+  document.addEventListener('dragstart', onDragStart, true);
+  document.addEventListener('mousedown', onResizeStart, true);
+  document.addEventListener('mouseup', onResizeStop, true);
+  document.addEventListener('dragend', onDragStop, true);
+
   let menu;
   // const plugin = context.plugin;
   const i18n = plugin?.i18n;
@@ -367,7 +399,7 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
                   timeout: 60_000,
                   url: params.srcURL,
                 });
-                
+
                 if (200 <= response.data.status && response.data.status < 300) {
                   const data_url = base64ToDataURL(response.data.body, response.data.contentType);
                   const image = nativeImage.createFromDataURL(data_url);
@@ -618,5 +650,12 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
     webview.addEventListener("dom-ready", () => {
       webview.openDevTools();
     });
+  }
+
+  return () => {
+    document.removeEventListener('dragstart', onDragStart);
+    document.removeEventListener('dragend', onDragStop);
+    document.removeEventListener('mousedown', onResizeStart);
+    document.removeEventListener('mouseup', onResizeStop);
   }
 };

@@ -2,7 +2,7 @@
     "name": "siyuan-plugin-webapp",
     "author": "zuoez02",
     "url": "https://github.com/zuoez02/siyuan-plugin-webview-flomo",
-    "version": "3.4.3",
+    "version": "3.4.4",
     "minAppVersion": "v2.10.14",
     "backends": ["windows", "linux", "darwin"],
     "frontends": ["desktop"],
