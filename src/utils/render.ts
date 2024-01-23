@@ -42,10 +42,69 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
   <div style="display: flex" class="webapp-view fn__flex-column fn__flex fn__flex-1 ${context.data.name}__custom-tab">
       <webview allowfullscreen allowpopups style="border: none" class="fn__flex-column fn__flex  fn__flex-1" src="${context.data.url}"
         ${context.data.proxy ? 'partition="' + context.data.name + '"' : ''}></webview>
+      <div class="webapp-view-controller">
+        <span class="pointer handle"><svg><use xlink:href="#iconSettings"></use></svg></span> 
+        <span class="pointer func home"><svg><use xlink:href="#iconLanguage"></use></svg>${plugin.i18n.home}</span>
+        <span class="pointer func refresh"><svg><use xlink:href="#iconRefresh"></use></svg>${plugin.i18n.refresh}</span>
+        <span class="pointer func goBack"><svg><use xlink:href="#iconLeft"></use></svg>${plugin.i18n.goBack}</span>
+        <span class="pointer func goForward"><svg><use xlink:href="#iconRight"></use></svg>${plugin.i18n.goForward}</span>
+        <span>|</span>
+        <span class="pointer func zoomIn"><svg><use xlink:href="#iconZoomIn"></use></svg>${plugin.i18n.zoomIn}</span>
+        <span class="pointer func zoomOut"><svg><use xlink:href="#iconZoomOut"></use></svg>${plugin.i18n.zoomOut}</span>
+        <span class="pointer func zoomRecovery"><svg><use xlink:href="#iconSearch"></use></svg>${plugin.i18n.zoomRecovery}</span>
+        <span>|</span>
+        <span class="pointer func devtool"><svg><use xlink:href="#iconInlineCode"></use></svg>${plugin.i18n.devtool}</span>
+      </div>
       <div class="webapp-view-cover fn__none" style="position: absolute; top: 0; left: 0; height: 100%; width: 100%;"></div>
   </div>`;
   const webview = context.element.querySelector("webview") as any;
   const cover = context.element.querySelector('.webapp-view-cover');
+  const controller = context.element.querySelector('.webapp-view-controller');
+  webview.addEventListener("dom-ready", () => {
+    controller.querySelector('.home').addEventListener('click', () => {
+      webview.src = context.data.url;
+    });
+    controller.querySelector('.refresh').addEventListener('click', () => {
+      webview.reload();
+    });
+    let zoom = [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.5, 2, 2.5, 3];
+    let index = zoom.findIndex(v => v === 1);
+    controller.querySelector('.zoomIn').addEventListener('click', () => {
+      if (index < zoom.length - 1) {
+        index++;
+        webview.setZoomFactor(zoom[index]);
+      }
+    });
+    controller.querySelector('.zoomOut').addEventListener('click', () => {
+      if (index > 0) {
+        index--;
+        webview.setZoomFactor(zoom[index]);
+      }
+    });
+    controller.querySelector('.zoomRecovery').addEventListener('click', () => {
+      if (index > 0) {
+        index = zoom.findIndex(v => v === 1);
+        webview.setZoomFactor(zoom[index]);
+      }
+    });
+    controller.querySelector('.goBack').addEventListener('click', () => {
+      if (webview.canGoBack()) {
+        webview.goBack();
+      }
+    });
+    controller.querySelector('.goForward').addEventListener('click', () => {
+      if (webview.canGoForward()) {
+        webview.goForward();
+      }
+    });
+    controller.querySelector('.devtool').addEventListener('click', () => {
+      if (!webview.isDevToolsOpened()) {
+        webview.openDevTools();
+      }
+    });
+  });
+
+
   let startDrag = false;
   function onDragStart(e) {
     const el = e.target;
@@ -59,7 +118,7 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
   }
   function onDragStop() {
     startDrag = false;
-    cover.classList.add('fn__none');  
+    cover.classList.add('fn__none');
   }
   function onResizeStart(e) {
     if (e.target.classList.contains('layout__resize')) {

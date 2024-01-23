@@ -25,6 +25,14 @@
     "warning": "Warning",
     "confirmDelete": "Are you sure to delete this app?",
     "copyWebviewBlock": "Copy WebApp as Block",
+    "home": "Home",
+    "refresh": "Reload",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "zoomRecovery": "Zoom Reload",
+    "goBack": "Go back",
+    "goForward": "Go forward",
+    "devtool": "Open Devtools",
     "menu": {
         "copyAlt": {
             "label": "Copy Description"

@@ -25,6 +25,14 @@
     "warning": "警告",
     "confirmDelete": "确认删除此应用吗?",
     "copyWebviewBlock": "复制为自定义块",
+    "home": "首页",
+    "refresh": "刷新",
+    "zoomIn": "放大",
+    "zoomOut": "缩小",
+    "zoomRecovery": "恢复",
+    "goBack": "后退",
+    "goForward": "前进",
+    "devtool": "开发者工具",
     "menu": {
         "copyAlt": {
             "label": "复制描述"
