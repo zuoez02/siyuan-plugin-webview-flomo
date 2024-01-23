@@ -171,16 +171,18 @@
     };
     const menu = new Menu("webapp-config");
     menu.addItem({
-      label: "自定义配置",
+      label: plugin.i18n.edit,
       icon: "iconTheme",
       click: () => {
         const dialog = new SettingDialog(
           app,
-          (title: string, css: string, script: string) => {
-            app.title = title;
-            app.css = css;
-            app.script = script;
-            shownApps = shownApps; //刷新
+          plugin.i18n,
+          (newApp) => {
+            app.title = newApp.title;
+            app.css = newApp.css;
+            app.script = newApp.script;
+            app.proxy = newApp.proxy;
+            apps = [...apps]; //刷新
             plugin.updateApp(app);
           }
         );

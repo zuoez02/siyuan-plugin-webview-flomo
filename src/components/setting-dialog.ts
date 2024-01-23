@@ -5,31 +5,37 @@ import { Setting } from "siyuan";
 export class SettingDialog {
     setting: Setting;
     app: WebApp;
+    i18n;
 
-    constructor(app: WebApp, callback?: (title: string, css: string, script: string) => void) {
+    constructor(app: WebApp, i18n, callback?: (app: any) => void) {
         this.app = app;
+        this.i18n = i18n;
         this.setting = new Setting({
-            height: '500px',
-            width: '500px',
+            height: '700px',
+            width: '700px',
             confirmCallback: async () => {
                 const title = eleTitle.value;
                 const css = eleCss.value;
                 const script = eleJs.value;
+                const proxy = proxyElement.value;
                 if (callback) {
-                    callback(title, css, script);
+                    callback({ title, css, script, proxy});
                 }
             }
         });
         //@ts-ignore
-        const eleTitle: HTMLInputElement = this.addItem('标题', 'Web App 的展示标题', 'textinput', this.app.title);
+        const eleTitle: HTMLInputElement = this.addItem(i18n.setting.name, i18n.setting.nameDesc, 'textinput', this.app.title);
         //@ts-ignore
-        const eleCss: HTMLInputElement = this.addItem('CSS代码', '插入的自定义 CSS 样式', 'textarea', this.app.css);
+        const proxyElement: HTMLInputElement = this.addItem(i18n.setting.proxy, i18n.setting.proxyDesc, 'textinput', this.app.proxy);
         //@ts-ignore
-        const eleJs: HTMLTextAreaElement = this.addItem('Js代码', '插入的自定义 Js 代码', 'textarea', this.app.script);
+        const eleCss: HTMLInputElement = this.addItem(i18n.setting.css, i18n.setting.cssDesc, 'textarea', this.app.css);
+        //@ts-ignore
+        const eleJs: HTMLTextAreaElement = this.addItem(i18n.setting.js, i18n.setting.jsDesc, 'textarea', this.app.script);
+        
     }
 
     show() {
-        this.setting.open(`Webapp ${this.app.name} 设置`)
+        this.setting.open(this.i18n.setting.title.replace("${name}", this.app.name))
     }
 
     /**

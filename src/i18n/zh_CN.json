@@ -33,6 +33,18 @@
     "goBack": "后退",
     "goForward": "前进",
     "devtool": "开发者工具",
+    "edit": "自定义配置",
+    "setting": {
+        "name": "应用名称",
+        "nameDesc": "名称仅支持英文",
+        "css": "CSS代码",
+        "cssDesc": "插入的自定义 CSS 样式",
+        "js": "JS代码",
+        "jsDesc": "插入的自定义 Js 代码",
+        "proxy": "代理配置",
+        "proxyDesc": "例如: http://192.168.1.1:10080",
+        "title": "`Webapp ${name} 设置"
+    },
     "menu": {
         "copyAlt": {
             "label": "复制描述"

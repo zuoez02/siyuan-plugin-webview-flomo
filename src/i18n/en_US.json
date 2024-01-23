@@ -33,6 +33,18 @@
     "goBack": "Go back",
     "goForward": "Go forward",
     "devtool": "Open Devtools",
+    "edit": "Edit",
+    "setting": {
+        "name": "App name",
+        "nameDesc": "Only supported English characters",
+        "css": "CSS",
+        "cssDesc": "Insert CSS Code",
+        "js": "Javascript",
+        "jsDesc": "Insert Javascript Code",
+        "proxy": "Proxy Configuration",
+        "proxyDesc": "Example: http://192.168.1.1:10080",
+        "title": "`Webapp ${name} Config"
+    },
     "menu": {
         "copyAlt": {
             "label": "Copy Description"
