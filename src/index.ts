@@ -10,6 +10,7 @@ import * as sdk from "@siyuan-community/siyuan-sdk";
 import "./index.scss";
 import { CustomBlockManager } from "siyuan-package-custom-block";
 import { WebAppViewBlock } from "./utils/viewblock";
+import $ from 'jquery';
 
 export default class WebAppPlugin extends Plugin {
   siyuan = siyuan;
@@ -29,16 +30,16 @@ export default class WebAppPlugin extends Plugin {
 
   docksConfig = [];
 
-  async onload() {
+  onload() {
     CustomBlockManager.init(this);
     CustomBlockManager.load(WebAppViewBlock);
   
     Object.assign(i18n, this.i18n);
     this.apps.forEach((app) => (app.internal = true));
-    await this.initStorage();
+    this.initStorage();
     this.apps.forEach((app) => this.loadApp(app));
     for (const dockname of this.docksConfig) {
-      await this.initDock(dockname);
+      this.initDock(dockname);
     }
     this.webAppDock = new WebAppDock(this);  
   }
@@ -57,13 +58,39 @@ export default class WebAppPlugin extends Plugin {
     this.initHomepageOnEmptyPage();
   }
 
-  async initStorage() {
-    const data = await this.loadData("apps.txt");
+  loadDataSync(name, parseJson = true) {
+    let data;
+    $.ajax({
+      url: '/api/file/getFile',
+      method: 'post',
+      async: false,
+      data: JSON.stringify({
+        path: `/data/storage/petal/siyuan-plugin-webapp/${name}`
+      }),
+      dataType: 'json',
+      contentType: 'application/json',
+      success: function (d) {
+          data = d;
+      }
+    });
+    if (parseJson) {
+      try {
+        return JSON.parse(data);
+      } catch {
+        return data;
+      }
+    }
+    return data;
+  }
+
+  initStorage() {
+    // const data = await this.loadData("apps.txt");
+    const data = this.loadDataSync("apps.txt", false);
     if (!data) {
-      await this.saveData("apps.txt", "[]");
+      this.saveData("apps.txt", "[]");
     } else {
       try {
-        const arr = JSON.parse(data);
+        const arr = typeof data === 'string' ? JSON.parse(data) : data;
         arr.forEach((conf) => {
           this.appsConfig.push(conf);
           this.apps.push(new WebApp(conf));
@@ -72,13 +99,13 @@ export default class WebAppPlugin extends Plugin {
         console.error(this.i18n.parseFail, e);
       }
     }
-    const docksConfig = await this.loadData("docks.json");
+    const docksConfig = this.loadDataSync("docks.json");
     if (!docksConfig) {
-      await this.saveData("docks.json", []);
+      this.saveData("docks.json", []);
     } else {
       this.docksConfig = docksConfig;
     }
-    const config = await this.loadData("setting.json");
+    const config = this.loadDataSync("setting.json");
     if (config) {
       this.settingConfig = Object.assign(this.settingConfig, config);
     }
@@ -152,7 +179,7 @@ export default class WebAppPlugin extends Plugin {
     }
   }
 
-  async initDock(dockname) {
+  initDock(dockname) {
     const plugin = this;
     const app = this.apps.find((d) => d.name === dockname);
     if (!app) {
@@ -185,8 +212,7 @@ export default class WebAppPlugin extends Plugin {
       return;
     }
     this.docksConfig.push(app.name);
-    await this.updateStorage();
-    window.location.reload();
+    this.updateStorage().then(() => window.location.reload());
   }
 
   showApp(name) {
