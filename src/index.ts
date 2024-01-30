@@ -15,7 +15,7 @@ import $ from 'jquery';
 export default class WebAppPlugin extends Plugin {
   siyuan = siyuan;
   webAppDock: WebAppDock;
-  
+
   client = new sdk.Client(undefined, 'fetch');
 
   apps = [flomo, cubox, cuboxPro, dida];
@@ -33,7 +33,7 @@ export default class WebAppPlugin extends Plugin {
   onload() {
     CustomBlockManager.init(this);
     CustomBlockManager.load(WebAppViewBlock);
-  
+
     Object.assign(i18n, this.i18n);
     this.apps.forEach((app) => (app.internal = true));
     this.initStorage();
@@ -41,7 +41,7 @@ export default class WebAppPlugin extends Plugin {
     for (const dockname of this.docksConfig) {
       this.initDock(dockname);
     }
-    this.webAppDock = new WebAppDock(this);  
+    this.webAppDock = new WebAppDock(this);
   }
 
   async updateApp(app: WebApp) {
@@ -70,15 +70,24 @@ export default class WebAppPlugin extends Plugin {
       dataType: 'json',
       contentType: 'application/json',
       success: function (d) {
-          data = d;
+        data = d;
       }
     });
     if (parseJson) {
+      if (typeof data !== 'string') {
+        if (data && data.code === 404) {
+          return null;
+        }
+        return data;
+      }
       try {
         return JSON.parse(data);
       } catch {
         return data;
       }
+    }
+    if (data && data.code === 404) {
+      return null;
     }
     return data;
   }
@@ -91,15 +100,19 @@ export default class WebAppPlugin extends Plugin {
     } else {
       try {
         const arr = typeof data === 'string' ? JSON.parse(data) : data;
-        arr.forEach((conf) => {
-          this.appsConfig.push(conf);
-          this.apps.push(new WebApp(conf));
-        });
+        if (Array.isArray(arr)) {
+          arr.forEach((conf) => {
+            this.appsConfig.push(conf);
+            this.apps.push(new WebApp(conf));
+          });
+        }
+
       } catch (e) {
         console.error(this.i18n.parseFail, e);
       }
     }
     const docksConfig = this.loadDataSync("docks.json");
+    console.log(docksConfig);
     if (!docksConfig) {
       this.saveData("docks.json", []);
     } else {
