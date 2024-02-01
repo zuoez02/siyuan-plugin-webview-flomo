@@ -112,7 +112,6 @@ export default class WebAppPlugin extends Plugin {
       }
     }
     const docksConfig = this.loadDataSync("docks.json");
-    console.log(docksConfig);
     if (!docksConfig) {
       this.saveData("docks.json", []);
     } else {

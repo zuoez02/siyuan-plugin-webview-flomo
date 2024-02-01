@@ -14,6 +14,7 @@ export class WebApp {
   url = "";
   debug = false;
   internal = false;
+  referer = '';
   openTab: () => void = null;
 
   constructor(options) {
@@ -29,6 +30,7 @@ export class WebApp {
     this.css = options.css || "";
     this.debug = options.debug || false;
     this.proxy = options.proxy || '';
+    this.referer = options.referer || '';
     this.loadIcon();
   }
 

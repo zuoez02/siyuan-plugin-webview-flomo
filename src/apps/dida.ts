@@ -9,6 +9,7 @@ export const dida = new WebApp({
   isTopBar: true,
   topBarPostion: "right",
   url: "https://www.dida365.com",
+  referer: 'https://dida365.com/webapp',
   script: `
   (function(){setInterval(() => {
     document.querySelectorAll('li.task:not([siyuan-draggable])').forEach((task) => {

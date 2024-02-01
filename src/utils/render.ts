@@ -711,6 +711,16 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
     });
   }
 
+  if (context.data.referer) {
+    const filter = {
+      urls: [context.data.url + '/*'],
+    };
+    require('@electron/remote').session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+      details.requestHeaders['Referer'] = context.data.referer;
+      callback({ cancel: false, requestHeaders: details.requestHeaders });
+    });
+  }
+
   return () => {
     document.removeEventListener('dragstart', onDragStart);
     document.removeEventListener('dragend', onDragStop);

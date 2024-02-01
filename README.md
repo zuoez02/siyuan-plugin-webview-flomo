@@ -43,6 +43,9 @@
 ---
 
 ## Changelog
+### v3.5.4
++ 增加webapp的referer配置，允许修改请求referer
+
 ### v3.5.3
 + 解决首次安装的失败问题
 
