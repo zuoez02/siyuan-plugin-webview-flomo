@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { i18n, readImageAsBase64 } from "@/utils";
+  import { i18n, readImageAsBase64, getIconFromUrl } from "@/utils";
   import WebAppPlugin from "..";
   import { Dialog } from "siyuan";
 
@@ -7,6 +7,8 @@
   let appurl = "";
   let appfile = null;
   let appproxy = "";
+  let allowPopups = false;
+  let autoIcon = false;
 
   const cancel = () => {
     reject();
@@ -14,7 +16,11 @@
 
   const submit = async () => {
     try {
-      const res = await readImageAsBase64(appfile);
+      let res;
+      res = await readImageAsBase64(appfile);
+      if (!res && autoIcon) {
+        res = await getIconFromUrl(appurl);
+      }
       const name = appname;
       const options = {
         name: name,
@@ -26,6 +32,8 @@
         topBarPostion: "right",
         url: appurl,
         proxy: appproxy,
+        autoIcon: autoIcon,
+        allowPopups: allowPopups,
       };
       plugin.addApp(options);
       dialog.destroy();
@@ -81,6 +89,26 @@
       name="appfile"
       id="appfile"
       bind:this={appfile}
+    />
+  </div>
+  <div class="b3-dialog-input">
+    <label for="allowPopups">{i18n.allowPopups}</label>
+    <input
+      class=""
+      type="checkbox"
+      name="allowPopups"
+      id="allowPopups"
+      bind:value={allowPopups}
+    />
+  </div>
+  <div class="b3-dialog-input">
+    <label for="autoIcon">{i18n.setting.autoIcon}</label>
+    <input
+      class=""
+      type="checkbox"
+      name="autoIcon"
+      id="autoIcon"
+      bind:value={autoIcon}
     />
   </div>
 </div>

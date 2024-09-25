@@ -43,7 +43,8 @@
         "jsDesc": "Insert Javascript Code",
         "proxy": "Proxy Configuration",
         "proxyDesc": "Example: http://192.168.1.1:10080",
-        "title": "`Webapp ${name} Config"
+        "title": "`Webapp ${name} Config",
+        "autoIcon": "Auto fetch icon"
     },
     "menu": {
         "copyAlt": {
@@ -134,5 +135,6 @@
         "openTabRight": {
             "label": "Open Right the Tab"
         }
-    }
+    },
+    "allowPopups": "Allow Popups"
 }

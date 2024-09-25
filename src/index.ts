@@ -47,9 +47,17 @@ export default class WebAppPlugin extends Plugin {
   async updateApp(app: WebApp) {
     let i = this.appsConfig.findIndex((v) => v.name === app.name);
     if (i >= 0) {
-      this.appsConfig[i] = app;
-      const s = JSON.stringify(this.appsConfig, null, 2);
-      await this.saveData("apps.txt", s);
+      this.appsConfig[i].title = app.title;
+      this.appsConfig[i].css = app.css;
+      this.appsConfig[i].script = app.script;
+      this.appsConfig[i].proxy = app.proxy;
+      this.appsConfig[i].autoIcon = app.autoIcon;
+      this.appsConfig[i].allowPopups = app.allowPopups;
+      let j = this.apps.findIndex((a) => a.name === app.name)
+      this.apps[j] = new WebApp(app);
+      this.loadApp(this.apps[j])
+
+      await this.updateStorage();
       showMessage(`Update app ${app.title}`);
     }
   }
@@ -101,6 +109,10 @@ export default class WebAppPlugin extends Plugin {
       try {
         const arr = typeof data === 'string' ? JSON.parse(data) : data;
         if (Array.isArray(arr)) {
+          arr.forEach((a) => {
+            a.autoIcon = a.autoIcon === true ? true : false;
+            a.allowPopups = a.allowPopups === false ? false : true;
+          })
           arr.forEach((conf) => {
             this.appsConfig.push(conf);
             this.apps.push(new WebApp(conf));
@@ -211,6 +223,8 @@ export default class WebAppPlugin extends Plugin {
         script: app.script,
         css: app.css,
         debug: app.debug,
+        autoIcon: app.autoIcon,
+        allowPopups: app.allowPopups
       },
       type: `${this.name}_${app.name}`,
       init() {

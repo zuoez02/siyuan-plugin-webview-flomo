@@ -8,12 +8,14 @@ export class WebApp {
   title = "";
   isTopBar = false;
   topBarPostion = "right";
+  autoIcon = false;
   script = "";
   css = "";
   proxy = '';
   url = "";
   debug = false;
   internal = false;
+  allowPopups = false;
   referer = '';
   openTab: () => void = null;
 
@@ -31,6 +33,8 @@ export class WebApp {
     this.debug = options.debug || false;
     this.proxy = options.proxy || '';
     this.referer = options.referer || '';
+    this.autoIcon = options.autoIcon || false;
+    this.allowPopups = options.allowPopups || false;
     this.loadIcon();
   }
 

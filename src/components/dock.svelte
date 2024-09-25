@@ -12,6 +12,7 @@
   let showHidden = false;
   let hidden: string[] = [];
   let apps: WebApp[] = [];
+  let count = 0;
 
   $: shownApps = apps.filter(
     (v) => showHidden || hidden.every((g) => g !== v.name)
@@ -125,6 +126,7 @@
     apps = [...plugin.apps];
     showHidden = plugin.settingConfig.showHidden;
     hidden = plugin.settingConfig.hidden;
+    refresh();
   };
 
   const deleteApp = (app: WebApp) => {
@@ -182,8 +184,12 @@
             app.css = newApp.css;
             app.script = newApp.script;
             app.proxy = newApp.proxy;
-            apps = [...apps]; //刷新
-            plugin.updateApp(app);
+            app.autoIcon = newApp.autoIcon;
+            app.allowPopups = newApp.allowPopups;
+            // apps = [...apps]; //刷新
+            plugin.updateApp(app).then(() => {
+              loadDataFromPlugin();
+            });
           }
         );
         dialog.show();
@@ -192,9 +198,12 @@
     menu.open(pos);
   };
 
+  const refresh = () => count++;
+
   export let plugin: WebAppPlugin;
 </script>
 
+{#key count}
 <div class="fn__flex-1 fn__flex-column">
   <div class="block__icons">
     <div class="block__logo">
@@ -259,3 +268,4 @@
     </Tree>
   </div>
 </div>
+{/key}

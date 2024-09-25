@@ -43,7 +43,8 @@
         "jsDesc": "插入的自定义 Js 代码",
         "proxy": "代理配置",
         "proxyDesc": "例如: http://192.168.1.1:10080",
-        "title": "`Webapp ${name} 设置"
+        "title": "`Webapp ${name} 设置",
+        "autoIcon": "自动获取图标"
     },
     "menu": {
         "copyAlt": {
@@ -134,5 +135,6 @@
         "openTabRight": {
             "label": "在页签右侧打开"
         }
-    }
+    },
+    "allowPopups": "允许打开外部连接"
 }

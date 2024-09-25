@@ -40,8 +40,8 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
    */
   context.element.innerHTML = `
   <div style="display: flex" class="webapp-view fn__flex-column fn__flex fn__flex-1 ${context.data.name}__custom-tab">
-      <webview allowfullscreen allowpopups style="border: none" class="fn__flex-column fn__flex  fn__flex-1" src="${context.data.url}"
-        ${context.data.proxy ? 'partition="' + context.data.name + '"' : ''}></webview>
+      <webview allowfullscreen style="border: none" class="fn__flex-column fn__flex  fn__flex-1" src="${context.data.url}"
+        ${context.data.proxy ? 'partition="' + context.data.name + '"' : ''} ${context.data.allowPopups ? 'allowpopups' : ''}></webview>
       <div class="webapp-view-controller">
         <span class="pointer handle"><svg><use xlink:href="#iconSettings"></use></svg></span> 
         <span class="pointer func home"><svg><use xlink:href="#iconLanguage"></use></svg>${plugin.i18n.home}</span>
@@ -60,6 +60,9 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
   const webview = context.element.querySelector("webview") as any;
   const cover = context.element.querySelector('.webapp-view-cover');
   const controller = context.element.querySelector('.webapp-view-controller');
+  // disable popups
+  
+
   webview.addEventListener("dom-ready", () => {
     controller.querySelector('.home').addEventListener('click', () => {
       webview.src = context.data.url;
@@ -102,8 +105,43 @@ export const renderView = (context: { element: Element, data: WebApp }, plugin: 
         webview.openDevTools();
       }
     });
+    // when disable allowPopups, hajack the a target blank click method.
+    if (!context.data.allowPopups) {
+      webview.executeJavaScript(`
+        window.open = function (url) {
+          console.log('window.open', url);
+          window.location.href = url;
+        } 
+        function getParentWithSiblings(node) {
+           while (node) {
+            if (node.tagName === 'a' || node.tagName === 'A') {
+              if (node.getAttribute('target') === '_blank') {
+                return node;
+              }
+            }
+            node = node.parentNode || null;
+           }
+           return null;
+        }
+        document.body.addEventListener('click', (event) => {
+          console.log(event.target);
+          if (!event || !event.target) {
+            return;
+          }
+          let el = event.target;
+          if (el.tagName !== 'a' && el.tagName !== 'A') {
+            el = getParentWithSiblings(el);
+          }
+          console.log(el);
+          if (el) {
+            const href = el.getAttribute('href') || '/';
+            window.location.href = href;
+            event.preventDefault();
+          }
+        })
+      `)
+    }
   });
-
 
   let startDrag = false;
   function onDragStart(e) {

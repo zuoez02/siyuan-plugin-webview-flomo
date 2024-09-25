@@ -18,8 +18,10 @@ export class SettingDialog {
                 const css = eleCss.value;
                 const script = eleJs.value;
                 const proxy = proxyElement.value;
+                const autoIcon = autoIconEl.checked;
+                const allowPopups = allowPopupsEl.checked;
                 if (callback) {
-                    callback({ title, css, script, proxy});
+                    callback({ title, css, script, proxy, autoIcon, allowPopups});
                 }
             }
         });
@@ -31,6 +33,10 @@ export class SettingDialog {
         const eleCss: HTMLInputElement = this.addItem(i18n.setting.css, i18n.setting.cssDesc, 'textarea', this.app.css);
         //@ts-ignore
         const eleJs: HTMLTextAreaElement = this.addItem(i18n.setting.js, i18n.setting.jsDesc, 'textarea', this.app.script);
+        //@ts-ignore
+        const autoIconEl: HTMLInputElement = this.addItem(i18n.setting.autoIcon, i18n.setting.autoIconDesc, 'checkbox', this.app.autoIcon);
+        //@ts-ignore
+        const allowPopupsEl: HTMLInputElement = this.addItem(i18n.allowPopups, i18n.allowPopups, 'checkbox', this.app.allowPopups);
         
     }
 
