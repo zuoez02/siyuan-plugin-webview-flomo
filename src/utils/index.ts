@@ -1,16 +1,25 @@
+import { Plugin } from "siyuan";
+
 export const i18n: { [key: string]: string } = {};
 
+let res: (value: Plugin) => void;
+
+let plugin: Promise<Plugin> = new Promise((resolve) => {
+  res = resolve;
+});
+
+export function setPlugin(p: Plugin) {
+  res(p);
+}
+
 export function registerIcon(name, size, svg) {
-  document.body.insertAdjacentHTML(
-    "beforeend",
-    `<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-          <symbol id="${name}" viewBox="0 0 ${size} ${size}">
-              ${svg}
-          </symbol>
-      </defs>
-  </svg>`
-  );
+  plugin.then(p => {
+    p.addIcons(`
+      <symbol id="${name}" viewBox="0 0 ${size} ${size}">
+        ${svg}
+      </symbol>
+    `);
+  })
 }
 
 export async function getIconFromUrl(url: string) {

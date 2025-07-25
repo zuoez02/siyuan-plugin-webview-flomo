@@ -3,7 +3,7 @@ import { WebAppDock } from "./WebAppDock";
 import { flomo } from "./apps/flomo";
 import { cubox, cuboxPro } from "./apps/cubox";
 import { dida } from "./apps/dida";
-import { i18n } from "./utils";
+import { i18n, setPlugin } from "./utils";
 import { WebApp } from "./WebApp";
 import { renderView } from "./utils/render";
 import * as sdk from "@siyuan-community/siyuan-sdk";
@@ -31,6 +31,7 @@ export default class WebAppPlugin extends Plugin {
   docksConfig = [];
 
   onload() {
+    setPlugin(this);
     CustomBlockManager.init(this);
     CustomBlockManager.load(WebAppViewBlock);
 
